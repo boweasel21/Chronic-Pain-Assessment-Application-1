@@ -336,7 +336,7 @@ export const useAnnounce = (): ((message: string, options?: AnnounceOptions) => 
 
     if (!liveRegionRef.current) {
       // Log warning in development mode
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         console.warn('useAnnounce: Live region not initialized');
       }
       return;
