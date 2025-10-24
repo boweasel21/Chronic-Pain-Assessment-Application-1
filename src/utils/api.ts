@@ -54,6 +54,35 @@ export interface APIResponse<T = unknown> {
 }
 
 /**
+ * Assessment data submitted from lead capture form
+ */
+export interface AssessmentData {
+  conditions: string[];
+  sensations: string[];
+  duration?: string;
+  intensity?: string;
+  previousTreatments: string[];
+  hasBudget?: boolean;
+  budgetRange?: string;
+  urgency?: string;
+  activityImpact?: string;
+  goals?: string;
+  name: string;
+  email: string;
+  phone: string;
+  completedAt: string;
+}
+
+/**
+ * Assessment submission response
+ */
+export interface AssessmentSubmissionResponse {
+  success: boolean;
+  message?: string;
+  data?: unknown;
+}
+
+/**
  * Default request timeout (30 seconds)
  */
 const DEFAULT_TIMEOUT = Number(import.meta.env.VITE_API_TIMEOUT) || 30000;
@@ -325,6 +354,36 @@ export const createAbortController = (): AbortController => {
   return new AbortController();
 };
 
+/**
+ * Submit assessment data to backend API
+ *
+ * @description Submits the complete assessment form with contact information
+ * and assessment responses to the backend for processing.
+ *
+ * @param {AssessmentData} assessmentData - Complete assessment data
+ * @returns {Promise<AssessmentSubmissionResponse>} Submission response
+ * @throws {APIError} If submission fails
+ */
+export const submitAssessment = async (
+  assessmentData: AssessmentData
+): Promise<AssessmentSubmissionResponse> => {
+  try {
+    const response = await post<AssessmentSubmissionResponse>(
+      '/assessments/submit',
+      assessmentData
+    );
+
+    return response.data;
+  } catch (error) {
+    logError(error, {
+      context: 'submitAssessment',
+      assessmentDataLength: Object.keys(assessmentData).length,
+    });
+
+    throw error;
+  }
+};
+
 export default {
   request,
   get,
@@ -333,5 +392,6 @@ export default {
   patch,
   del,
   createAbortController,
+  submitAssessment,
   APIError,
 };

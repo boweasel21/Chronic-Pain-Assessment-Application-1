@@ -11,7 +11,7 @@ import { test, expect } from '@playwright/test';
 /**
  * Test configuration
  */
-const BASE_URL = process.env.BASE_URL || 'http://localhost:5173';
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3003';
 const MOBILE_VIEWPORT = { width: 375, height: 667 };
 const TABLET_VIEWPORT = { width: 768, height: 1024 };
 const DESKTOP_VIEWPORT = { width: 1920, height: 1080 };
