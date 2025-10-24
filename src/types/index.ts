@@ -10,28 +10,51 @@ export type QualificationStatus = 'qualified' | 'disqualified' | 'pending';
 
 /**
  * Type of chronic pain condition
+ * This includes all specific condition IDs plus 'other' for unlisted conditions
  */
 export type ConditionType =
-  | 'arthritis'
   | 'fibromyalgia'
+  | 'chronic-fatigue'
   | 'neuropathy'
-  | 'back_pain'
+  | 'complex-regional'
   | 'migraine'
-  | 'complex_regional_pain'
+  | 'back-pain'
+  | 'arthritis'
+  | 'lupus'
+  | 'lyme'
+  | 'neck-pain'
+  | 'joint-pain'
+  | 'muscle-pain'
+  | 'tension-headaches'
+  | 'autoimmune'
+  | 'ehlers-danlos'
+  | 'cancer-pain'
+  | 'post-surgical'
+  | 'active-injury'
+  | 'severe-psychiatric'
+  | 'kidney-disease'
+  | 'liver-disease'
+  | 'heart-failure'
+  | 'unstable-cardiac'
+  | 'severe-copd'
+  | 'dementia'
+  | 'rheumatoid-arthritis'
   | 'other';
 
 /**
  * Pain sensation characteristics
+ * Maps to the actual sensation IDs from the sensations data
  */
 export type SensationType =
   | 'burning'
   | 'tingling'
-  | 'numbness'
-  | 'sharp'
-  | 'dull_ache'
+  | 'sharp-stabbing'
+  | 'aching'
   | 'throbbing'
-  | 'stabbing'
-  | 'shooting';
+  | 'shooting'
+  | 'cramping'
+  | 'electric'
+  | 'pressure';
 
 /**
  * Treatment categories available

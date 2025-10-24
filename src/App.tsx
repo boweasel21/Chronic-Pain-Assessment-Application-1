@@ -1,48 +1,47 @@
 /**
  * Main Application Component
  * Configures routing and provides global context
+ *
+ * Security Features:
+ * - CSRF protection initialized on app mount
+ * - All API requests automatically protected with CSRF tokens
  */
 
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AssessmentProvider } from '@context/AssessmentContext';
 import AssessmentLayout from '@components/layout/AssessmentLayout';
+import { useCsrfInit } from './hooks/useCsrf';
 
 /**
  * Lazy-loaded page components for code splitting
  * Pages will be loaded on demand for better performance
  */
+
+/* Assessment Pages (1-8) */
 const LandingPage = React.lazy(() => import('./pages/LandingPage'));
 const CellularSciencePage = React.lazy(() => import('./pages/CellularSciencePage'));
 const ConditionConfirmationPage = React.lazy(() => import('./pages/ConditionConfirmationPage'));
-const WelcomePage = React.lazy(() => import('./pages/WelcomePage'));
-const DiagnosisPage = React.lazy(() => import('./pages/DiagnosisPage'));
-const DurationPage = React.lazy(() => import('./pages/DurationPage'));
-const AgePage = React.lazy(() => import('./pages/AgePage'));
-const DisqualifiedPage = React.lazy(() => import('./pages/DisqualificationPage'));
-const WaitingListPage = React.lazy(() => import('./pages/WaitingListPage'));
-const ConditionTypePage = React.lazy(() => import('./pages/ConditionTypePage'));
-const LocationPage = React.lazy(() => import('./pages/LocationPage'));
-const SensationsPage = React.lazy(() => import('./pages/SensationsPage'));
-const PainLevelPage = React.lazy(() => import('./pages/PainLevelPage'));
-const TriggersPage = React.lazy(() => import('./pages/TriggersPage'));
-const ImpactPage = React.lazy(() => import('./pages/ImpactPage'));
-const TreatmentsPage = React.lazy(() => import('./pages/TreatmentsPage'));
-const EffectivenessPage = React.lazy(() => import('./pages/EffectivenessPage'));
-const LifestylePage = React.lazy(() => import('./pages/LifestylePage'));
-const WellnessPage = React.lazy(() => import('./pages/WellnessPage'));
-const SupportPage = React.lazy(() => import('./pages/SupportPage'));
-const EducationPage = React.lazy(() => import('./pages/EducationPage'));
 const TreatmentHistory = React.lazy(() => import('./pages/TreatmentHistory'));
 const UrgencyAssessment = React.lazy(() => import('./pages/UrgencyAssessment'));
 const BudgetQualification = React.lazy(() => import('./pages/BudgetQualification'));
 const AffordabilityCheck = React.lazy(() => import('./pages/AffordabilityCheck'));
-const ProcessExplanation = React.lazy(() => import('./pages/ProcessExplanation'));
-const DetailedProcess = React.lazy(() => import('./pages/DetailedProcess'));
-const ProofOffer1 = React.lazy(() => import('./pages/ProofOffer1'));
-const ProofOffer2 = React.lazy(() => import('./pages/ProofOffer2'));
 const AdditionalInfo = React.lazy(() => import('./pages/AdditionalInfo'));
 const ResultsPage = React.lazy(() => import('./pages/ResultsPage'));
+
+/* Exit Pages */
+const DisqualificationPage = React.lazy(() => import('./pages/DisqualificationPage'));
+const WaitingListPage = React.lazy(() => import('./pages/WaitingListPage'));
+
+/* Educational Flow Pages (9-10) */
+const ProcessExplanation = React.lazy(() => import('./pages/ProcessExplanation'));
+const DetailedProcess = React.lazy(() => import('./pages/DetailedProcess'));
+
+/* Proof Offer Pages (11-12) */
+const ProofOffer1 = React.lazy(() => import('./pages/ProofOffer1'));
+const ProofOffer2 = React.lazy(() => import('./pages/ProofOffer2'));
+
+/* Lead Capture & Final Pages (13-14) */
 const LeadCapture = React.lazy(() => import('./pages/LeadCapture'));
 const FinalVideoPage = React.lazy(() => import('./pages/FinalVideoPage'));
 
@@ -101,300 +100,158 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
  * Sets up routing, context providers, and global suspense boundaries
  */
 const App: React.FC = () => {
+  // Initialize CSRF protection on app mount
+  useCsrfInit();
+
   return (
     <BrowserRouter>
       <AssessmentProvider>
         <React.Suspense fallback={<LoadingFallback />}>
           <Routes>
-            {/* Primary Cell Assessment Pages 1-3 */}
-            <Route
-              path="/"
-              element={<LandingPage />}
-            />
+            {/* Page 1: Landing Page - Initial Qualification */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/waiting-list" element={<WaitingListPage />} />
+
+            {/* Page 2: Cellular Science & Condition Selection */}
             <Route
               path="/cellular-science"
-              element={<CellularSciencePage />}
+              element={
+                <AssessmentLayout>
+                  <CellularSciencePage />
+                </AssessmentLayout>
+              }
             />
+
+            {/* Disqualification Page */}
+            <Route path="/disqualified" element={<DisqualificationPage />} />
+
+            {/* Page 3: Condition Confirmation */}
             <Route
               path="/condition-confirmation"
-              element={<ConditionConfirmationPage />}
-            />
-            <Route
-              path="/waiting-list"
-              element={<WaitingListPage />}
+              element={
+                <AssessmentLayout>
+                  <ConditionConfirmationPage />
+                </AssessmentLayout>
+              }
             />
 
-            {/* Legacy Welcome and Qualification Routes */}
-            <Route
-              path="/welcome"
-              element={
-                <AssessmentLayout>
-                  <WelcomePage />
-                </AssessmentLayout>
-              }
-            />
-            <Route
-              path="/diagnosis"
-              element={
-                <AssessmentLayout>
-                  <DiagnosisPage />
-                </AssessmentLayout>
-              }
-            />
-            <Route
-              path="/duration"
-              element={
-                <AssessmentLayout>
-                  <DurationPage />
-                </AssessmentLayout>
-              }
-            />
-            <Route
-              path="/age"
-              element={
-                <AssessmentLayout>
-                  <AgePage />
-                </AssessmentLayout>
-              }
-            />
-            <Route
-              path="/disqualified"
-              element={<DisqualifiedPage />}
-            />
-
-            {/* Personalization Routes - Protected */}
-            <Route
-              path="/condition"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <ConditionTypePage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/location"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <LocationPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/sensations"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <SensationsPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/pain-level"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <PainLevelPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/triggers"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <TriggersPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/impact"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <ImpactPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/treatments"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <TreatmentsPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/effectiveness"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <EffectivenessPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/lifestyle"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <LifestylePage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/wellness"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <WellnessPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/support"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <SupportPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/education"
-              element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <EducationPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
-              }
-            />
+            {/* Page 4: Treatment History */}
             <Route
               path="/treatment-history"
               element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <TreatmentHistory />
-                  </AssessmentLayout>
-                </ProtectedRoute>
+                <AssessmentLayout>
+                  <TreatmentHistory />
+                </AssessmentLayout>
               }
             />
+
+            {/* Page 5: Urgency Assessment */}
             <Route
               path="/urgency-assessment"
               element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <UrgencyAssessment />
-                  </AssessmentLayout>
-                </ProtectedRoute>
+                <AssessmentLayout>
+                  <UrgencyAssessment />
+                </AssessmentLayout>
               }
             />
+
+            {/* Page 6: Budget Qualification */}
             <Route
               path="/budget-qualification"
               element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <BudgetQualification />
-                  </AssessmentLayout>
-                </ProtectedRoute>
+                <AssessmentLayout>
+                  <BudgetQualification />
+                </AssessmentLayout>
               }
             />
+
+            {/* Page 6B: Affordability Check (conditional from Page 6) */}
             <Route
               path="/affordability"
               element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <AffordabilityCheck />
-                  </AssessmentLayout>
-                </ProtectedRoute>
+                <AssessmentLayout>
+                  <AffordabilityCheck />
+                </AssessmentLayout>
               }
             />
+
+            {/* Page 7: Additional Information */}
             <Route
               path="/additional-info"
               element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <AdditionalInfo />
-                  </AssessmentLayout>
-                </ProtectedRoute>
+                <AssessmentLayout>
+                  <AdditionalInfo />
+                </AssessmentLayout>
               }
             />
+
+            {/* Page 8: Personalized Results Page */}
             <Route
               path="/results"
               element={
-                <ProtectedRoute>
-                  <AssessmentLayout>
-                    <ResultsPage />
-                  </AssessmentLayout>
-                </ProtectedRoute>
+                <AssessmentLayout>
+                  <ResultsPage />
+                </AssessmentLayout>
               }
             />
 
-            {/* Educational Flow Routes - Pages 9-10 */}
+            {/* Page 9: Process Explanation */}
             <Route
               path="/process-explanation"
               element={
-                <ProtectedRoute>
+                <AssessmentLayout>
                   <ProcessExplanation />
-                </ProtectedRoute>
+                </AssessmentLayout>
               }
             />
+
+            {/* Page 10: Detailed 4-Step Process */}
             <Route
               path="/detailed-process"
               element={
-                <ProtectedRoute>
+                <AssessmentLayout>
                   <DetailedProcess />
-                </ProtectedRoute>
+                </AssessmentLayout>
               }
             />
 
-            {/* Proof Offer Routes - Pages 11-12 */}
+            {/* Page 11: Proof Offer 1 - Highlights Video */}
             <Route
               path="/proof-offer-1"
               element={
-                <ProtectedRoute>
+                <AssessmentLayout>
                   <ProofOffer1 />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/proof-offer-2"
-              element={
-                <ProtectedRoute>
-                  <ProofOffer2 />
-                </ProtectedRoute>
+                </AssessmentLayout>
               }
             />
 
-            {/* Lead Capture & Final Video - Pages 13-14 */}
+            {/* Page 12: Proof Offer 2 - Demo Video */}
+            <Route
+              path="/proof-offer-2"
+              element={
+                <AssessmentLayout>
+                  <ProofOffer2 />
+                </AssessmentLayout>
+              }
+            />
+
+            {/* Page 13: Lead Capture Form */}
             <Route
               path="/lead-capture"
               element={
-                <ProtectedRoute>
+                <AssessmentLayout>
                   <LeadCapture />
-                </ProtectedRoute>
+                </AssessmentLayout>
               }
             />
+
+            {/* Page 14: Final Video & Confirmation */}
             <Route
               path="/final-video"
               element={
-                <ProtectedRoute>
+                <AssessmentLayout>
                   <FinalVideoPage />
-                </ProtectedRoute>
+                </AssessmentLayout>
               }
             />
 

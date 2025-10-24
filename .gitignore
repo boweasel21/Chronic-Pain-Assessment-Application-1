@@ -44,3 +44,6 @@ coverage/
 .temp/
 .tmp/
 *.tsbuildinfo
+
+*storybook.log
+storybook-static

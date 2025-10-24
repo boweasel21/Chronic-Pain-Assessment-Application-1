@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAssessment } from '@context/AssessmentContext';
+import { usePageFocus, usePrefersReducedMotion } from '@hooks/useAccessibility';
 import { Button } from '@components/common/Button';
 import styles from './LandingPage.module.css';
 
@@ -42,6 +43,12 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { updateResponse } = useAssessment();
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
+
+  /**
+   * Accessibility: Focus management and motion preferences
+   */
+  usePageFocus('landing-main');
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   /**
    * Educational content blocks data
@@ -89,57 +96,72 @@ const LandingPage: React.FC = () => {
   };
 
   /**
-   * Container animation variants
+   * Container animation variants - respects reduced motion
    */
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
+  const containerVariants = prefersReducedMotion
+    ? {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.01 } },
+      }
+    : {
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: 0.1,
+            delayChildren: 0.2,
+          },
+        },
+      };
 
   /**
-   * Item animation variants
+   * Item animation variants - respects reduced motion
    */
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: 'easeOut',
-      },
-    },
-  };
+  const itemVariants = prefersReducedMotion
+    ? {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.01 } },
+      }
+    : {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: 0.5,
+            ease: 'easeOut',
+          },
+        },
+      };
 
   /**
-   * Button animation variants
+   * Button animation variants - respects reduced motion
    */
-  const buttonVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.4,
-        ease: 'easeOut',
-      },
-    },
-    hover: {
-      scale: 1.05,
-      transition: {
-        duration: 0.2,
-      },
-    },
-    tap: {
-      scale: 0.95,
-    },
-  };
+  const buttonVariants = prefersReducedMotion
+    ? {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.01 } },
+      }
+    : {
+        hidden: { opacity: 0, scale: 0.9 },
+        visible: {
+          opacity: 1,
+          scale: 1,
+          transition: {
+            duration: 0.4,
+            ease: 'easeOut',
+          },
+        },
+        hover: {
+          scale: 1.05,
+          transition: {
+            duration: 0.2,
+          },
+        },
+        tap: {
+          scale: 0.95,
+        },
+      };
 
   /**
    * Save progress to localStorage on mount
@@ -155,10 +177,13 @@ const LandingPage: React.FC = () => {
 
   return (
     <motion.div
+      id="landing-main"
       className={styles.landing}
       initial="hidden"
       animate="visible"
       variants={containerVariants}
+      tabIndex={-1}
+      style={{ outline: 'none' }}
     >
       {/* Hero Section */}
       <motion.section

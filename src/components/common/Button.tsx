@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 import { motion, MotionProps } from 'framer-motion';
+import { usePrefersReducedMotion } from '@hooks/useAccessibility';
 import styles from './Button.module.css';
 
 /**
@@ -109,6 +110,12 @@ export const Button = ({
   ...rest
 }: ButtonProps): JSX.Element => {
   /**
+   * Check if user prefers reduced motion
+   * Disables animations for users with motion sensitivities
+   */
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  /**
    * Combine CSS classes based on props
    */
   const buttonClasses = [
@@ -124,9 +131,10 @@ export const Button = ({
 
   /**
    * Animation variants for Framer Motion
-   * Respects reduced motion preference
+   * Respects reduced motion preference and disabled state
+   * If user prefers reduced motion or button is disabled, no animations are applied
    */
-  const motionProps: MotionProps = disabled
+  const motionProps: MotionProps = disabled || prefersReducedMotion
     ? {}
     : {
         whileHover: { scale: 1.02 },

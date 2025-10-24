@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAssessment } from '@context/AssessmentContext';
+import { usePageFocus } from '@hooks/useAccessibility';
 import { Checkbox } from '@components/common/Checkbox';
 import { Button } from '@components/common/Button';
 import ProgressBar from '@components/layout/ProgressBar';
@@ -17,7 +18,8 @@ import {
   getNonTreatableConditions,
   isConditionTreatable,
   type Condition,
-} from '../../../data/conditions';
+} from '@data/conditions';
+import { type ConditionType } from '@types';
 import styles from './CellularSciencePage.module.css';
 
 /**
@@ -47,6 +49,11 @@ import styles from './CellularSciencePage.module.css';
 const CellularSciencePage: React.FC = () => {
   const navigate = useNavigate();
   const { updateResponse, state } = useAssessment();
+
+  /**
+   * Accessibility: Focus management on page load
+   */
+  usePageFocus();
 
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
   const [otherConditions, setOtherConditions] = useState<string>('');
@@ -141,8 +148,16 @@ const CellularSciencePage: React.FC = () => {
 
     const route = determineRoute();
 
+    // Find the first selected condition or default to 'other'
+    const firstConditionId = selectedConditions[0];
+    const firstCondition: Condition | undefined = firstConditionId
+      ? CONDITIONS.find((c: Condition) => c.id === firstConditionId)
+      : undefined;
+
+    const conditionTypeValue: string = firstCondition?.id || 'other';
+
     updateResponse({
-      conditionType: selectedConditions[0] as any || 'other',
+      conditionType: conditionTypeValue as ConditionType,
     });
 
     try {
@@ -332,7 +347,7 @@ const CellularSciencePage: React.FC = () => {
                   variants={collapseVariants}
                 >
                   <div className={styles.cellular__checkboxGrid}>
-                    {treatableConditions.map((condition) => (
+                    {treatableConditions.map((condition: Condition) => (
                       <Checkbox
                         key={condition.id}
                         id={`condition-${condition.id}`}
@@ -381,7 +396,7 @@ const CellularSciencePage: React.FC = () => {
                   variants={collapseVariants}
                 >
                   <div className={styles.cellular__checkboxGrid}>
-                    {nonTreatableConditions.map((condition) => (
+                    {nonTreatableConditions.map((condition: Condition) => (
                       <Checkbox
                         key={condition.id}
                         id={`condition-${condition.id}`}

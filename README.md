@@ -68,6 +68,12 @@ npm run type-check
 
 # Lint code
 npm run lint
+
+# Run Storybook (component documentation)
+npm run storybook
+
+# Build Storybook for deployment
+npm run build-storybook
 ```
 
 ## Environment Variables
@@ -89,6 +95,37 @@ VITE_ENVIRONMENT=development
 - **No Console Logs**: Production-ready code
 - **JSDoc Comments**: Comprehensive documentation
 
+### Component Documentation (Storybook)
+
+A living component library is available via Storybook, documenting all UI components with:
+
+- **Interactive Examples**: Test all component variants and states
+- **Props Documentation**: Auto-generated from TypeScript interfaces
+- **Accessibility Testing**: Built-in a11y addon for WCAG compliance
+- **Responsive Previews**: Test components at different viewport sizes
+- **Design System**: Complete reference for colors, typography, spacing
+
+```bash
+# Start Storybook development server
+npm run storybook
+# Opens at http://localhost:6006
+
+# Build static Storybook for deployment
+npm run build-storybook
+```
+
+**Documentation:**
+- Full guide: `/docs/COMPONENT_LIBRARY_STORYBOOK.md`
+- Component stories: `/src/components/**/*.stories.tsx`
+- Page stories: `/src/pages/**/*.stories.tsx`
+
+**Available Stories:**
+- Button (3 variants, 2 sizes, all states)
+- FormField (6 input types, error/helper states)
+- Checkbox (checked/unchecked, disabled, with descriptions)
+- Card (3 variants, 5 shadow depths, interactive)
+- LandingPage (responsive views, accessibility demos)
+
 ### Accessibility
 
 - WCAG 2.1 AA compliant
@@ -96,6 +133,7 @@ VITE_ENVIRONMENT=development
 - Screen reader optimized
 - Focus management
 - ARIA labels and live regions
+- Tested with Storybook a11y addon
 
 ### Performance
 

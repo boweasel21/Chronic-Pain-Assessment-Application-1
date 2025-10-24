@@ -18,10 +18,12 @@
       "@components/*": ["./src/components/*"],
       "@pages/*": ["./src/pages/*"],
       "@context/*": ["./src/context/*"],
+      "@types": ["./src/types"],
       "@types/*": ["./src/types/*"],
       "@styles/*": ["./src/styles/*"],
       "@utils/*": ["./src/utils/*"],
-      "@hooks/*": ["./src/hooks/*"]
+      "@hooks/*": ["./src/hooks/*"],
+      "@data/*": ["./data/*"]
     },
 
     /* Emit */
@@ -55,7 +57,7 @@
     /* Skip LibCheck */
     "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": ["src", "data", "utils", "types"],
   "exclude": ["node_modules", "dist", "build"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

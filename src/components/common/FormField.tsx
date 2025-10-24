@@ -1,5 +1,7 @@
 import { InputHTMLAttributes, useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { usePrefersReducedMotion } from '@hooks/useAccessibility';
+import { sanitizeInput, sanitizeEmail, sanitizePhone, sanitizeName } from '../../../utils/sanitizer';
 import styles from './FormField.module.css';
 
 /**
@@ -29,7 +31,7 @@ export interface FormFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
 
   /**
    * Change handler called when input value changes
-   * @param value - New input value
+   * @param value - New input value (sanitized)
    */
   onChange: (value: string) => void;
 
@@ -84,9 +86,12 @@ export interface FormFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
 /**
  * FormField Component
  *
- * @description Premium form input field with animated label, focus states, and
- * error handling. Features floating label animation, border transitions, and
- * full accessibility support. Label moves up when focused or filled.
+ * @description Premium form input field with animated label, focus states,
+ * input sanitization, and error handling. Features floating label animation,
+ * border transitions, and full accessibility support.
+ *
+ * SECURITY: All input is sanitized based on field type to prevent XSS attacks.
+ * Sanitization happens on every keystroke before calling onChange.
  *
  * @example
  * ```tsx
@@ -124,6 +129,12 @@ export const FormField = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   /**
+   * Check if user prefers reduced motion
+   * Disables animations for users with motion sensitivities
+   */
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  /**
    * Generate unique ID if not provided
    */
   const fieldId = id || `form-field-${label.toLowerCase().replace(/\s+/g, '-')}`;
@@ -136,10 +147,32 @@ export const FormField = ({
   const isFloating = isFocused || value.length > 0;
 
   /**
-   * Handle input value change
+   * Handle input value change with sanitization
+   *
+   * @description Sanitizes input based on field type before passing to onChange.
+   * SECURITY: Prevents XSS attacks by sanitizing all user input immediately.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - Input change event
    */
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    onChange(event.target.value);
+    const rawValue = event.target.value;
+    let sanitized: string;
+
+    switch (type) {
+      case 'email':
+        sanitized = sanitizeEmail(rawValue);
+        break;
+      case 'tel':
+        sanitized = sanitizePhone(rawValue);
+        break;
+      case 'text':
+        sanitized = sanitizeName(rawValue, 100);
+        break;
+      default:
+        sanitized = sanitizeInput(rawValue, { maxLength: 100 });
+    }
+
+    onChange(sanitized);
   };
 
   /**
@@ -171,9 +204,7 @@ export const FormField = ({
 
   return (
     <div className={containerClasses}>
-      {/* Input wrapper with border animations */}
       <div className={styles.formField__inputWrapper}>
-        {/* Animated label */}
         <motion.label
           htmlFor={fieldId}
           className={styles.formField__label}
@@ -186,16 +217,19 @@ export const FormField = ({
               ? 'rgba(29, 44, 73, 1)'
               : '#737373'
           }}
-          transition={{
-            duration: 0.15,
-            ease: 'easeOut'
-          }}
+          transition={
+            prefersReducedMotion
+              ? { duration: 0.01 }
+              : {
+                  duration: 0.15,
+                  ease: 'easeOut'
+                }
+          }
         >
           {label}
           {required && <span className={styles.formField__required} aria-label="required">*</span>}
         </motion.label>
 
-        {/* Input field */}
         <input
           ref={inputRef}
           id={fieldId}
@@ -216,28 +250,30 @@ export const FormField = ({
           {...rest}
         />
 
-        {/* Animated border bottom - appears on focus */}
         <motion.div
           className={styles.formField__borderBottom}
           initial={{ scaleX: 0 }}
           animate={{ scaleX: isFocused ? 1 : 0 }}
-          transition={{
-            duration: 0.3,
-            ease: 'easeOut'
-          }}
+          transition={
+            prefersReducedMotion
+              ? { duration: 0.01 }
+              : {
+                  duration: 0.3,
+                  ease: 'easeOut'
+                }
+          }
         />
       </div>
 
-      {/* Error message with icon */}
       {error && (
         <motion.div
           className={styles.formField__error}
           id={errorId}
           role="alert"
-          initial={{ opacity: 0, y: -8 }}
+          initial={{ opacity: 0, y: prefersReducedMotion ? 0 : -8 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.2 }}
+          exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -8 }}
+          transition={prefersReducedMotion ? { duration: 0.01 } : { duration: 0.2 }}
         >
           <svg
             className={styles.formField__errorIcon}
@@ -257,7 +293,6 @@ export const FormField = ({
         </motion.div>
       )}
 
-      {/* Helper text (shown when no error) */}
       {!error && helperText && (
         <p className={styles.formField__helper} id={helperId}>
           {helperText}

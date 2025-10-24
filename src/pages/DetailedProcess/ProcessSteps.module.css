@@ -1,0 +1,8 @@
+/**
+ * ProcessSteps Container Styles
+ * Container for all process step cards
+ */
+
+.stepsSection {
+  margin-bottom: var(--spacing-3xl);
+}

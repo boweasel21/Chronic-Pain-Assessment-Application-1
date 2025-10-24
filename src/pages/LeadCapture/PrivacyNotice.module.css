@@ -1,0 +1,66 @@
+/**
+ * PrivacyNotice Component Styles
+ * Privacy assurance message styling
+ */
+
+.container {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(226, 211, 163, 0.1);
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.lockIcon {
+  flex-shrink: 0;
+  color: rgba(29, 44, 73, 1);
+  margin-top: 2px;
+}
+
+.text {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  color: rgba(55, 65, 81, 1);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.link {
+  color: rgba(29, 44, 73, 1);
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: rgba(226, 211, 163, 1);
+}
+
+.link:focus-visible {
+  outline: 2px solid rgba(226, 211, 163, 1);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .link:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .container {
+    border: 1px solid rgba(229, 231, 235, 1);
+  }
+}

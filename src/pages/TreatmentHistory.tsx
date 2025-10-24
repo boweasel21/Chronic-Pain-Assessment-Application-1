@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAssessment } from '@context/AssessmentContext';
 import { Button } from '@components/common/Button';
 import { Checkbox } from '@components/common/Checkbox';
-import { TREATMENTS, getTreatmentsByCategory } from '../../data/treatments';
+import { TREATMENTS, getTreatmentsByCategory } from '@data/treatments';
 import styles from './TreatmentHistory.module.css';
 
 /**

@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAssessmentResponse } from '@context/AssessmentContext';
 import { Button } from '@components/common/Button';
+import { type AssessmentResponse } from '@types';
 import styles from './DisqualificationPage.module.css';
 
 /**
@@ -323,7 +324,7 @@ const DisqualificationPage: React.FC = () => {
  * @param response - Assessment response data
  * @returns Disqualification reason key
  */
-function getDisqualificationReasonKey(response: any): string {
+function getDisqualificationReasonKey(response: AssessmentResponse): string {
   if (!response.hasClinicalDiagnosis) {
     return 'no-diagnosis';
   }

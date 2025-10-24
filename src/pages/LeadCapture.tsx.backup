@@ -10,6 +10,7 @@ import { useAssessment } from '@context/AssessmentContext';
 import { Button } from '@components/common/Button';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
 import { submitAssessment, AssessmentData } from '../../utils/api';
+import { sanitizeName, sanitizeEmail, sanitizePhone } from '../../utils/sanitizer';
 import styles from './LeadCapture.module.css';
 
 /**
@@ -45,8 +46,11 @@ type SubmissionState = 'idle' | 'loading' | 'success' | 'error';
  * LeadCapture Page Component
  *
  * @description Final conversion page capturing contact information.
- * Features real-time validation, localStorage auto-save, loading states,
- * success animation, and API submission. Routes to final video page on success.
+ * Features real-time validation, sanitization, loading states, success animation,
+ * and API submission. Routes to final video page on success.
+ *
+ * SECURITY: All PII is stored only in React state (NOT localStorage) to prevent
+ * XSS exposure. Input is sanitized on change and before submission.
  *
  * @returns {JSX.Element} Lead capture page
  */
@@ -66,36 +70,19 @@ const LeadCapture = (): JSX.Element => {
   const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
 
   /**
-   * Load saved contact info from localStorage on mount
+   * Cleanup effect - Clear sensitive data on unmount
+   * SECURITY: Ensures PII is not persisted in memory after navigation
    */
   useEffect(() => {
-    const saved = localStorage.getItem('assessment_contact_info');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        setName(data.name || '');
-        setEmail(data.email || '');
-        setPhone(data.phone || '');
-      } catch (error) {
-        // Silent fail - invalid JSON
-      }
-    }
-
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    return (): void => {
+      setName('');
+      setEmail('');
+      setPhone('');
+      setErrors({});
+    };
   }, []);
-
-  /**
-   * Auto-save to localStorage with debounce
-   */
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      const data = { name, email, phone };
-      localStorage.setItem('assessment_contact_info', JSON.stringify(data));
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [name, email, phone]);
 
   /**
    * Validate name field
@@ -162,40 +149,46 @@ const LeadCapture = (): JSX.Element => {
   }, [name, email, phone, validateName, validateEmail, validatePhone]);
 
   /**
-   * Handle name input change
+   * Handle name input change with sanitization
+   * SECURITY: Sanitizes input immediately to prevent XSS
    */
   const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-    const value = e.target.value;
-    setName(value);
+    const rawValue = e.target.value;
+    const sanitized = sanitizeName(rawValue, 100);
+    setName(sanitized);
 
     if (touched.name) {
-      const error = validateName(value);
+      const error = validateName(sanitized);
       setErrors((prev) => ({ ...prev, name: error }));
     }
   }, [touched.name, validateName]);
 
   /**
-   * Handle email input change
+   * Handle email input change with sanitization
+   * SECURITY: Sanitizes input immediately to prevent XSS
    */
   const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-    const value = e.target.value;
-    setEmail(value);
+    const rawValue = e.target.value;
+    const sanitized = sanitizeEmail(rawValue);
+    setEmail(sanitized);
 
     if (touched.email) {
-      const error = validateEmail(value);
+      const error = validateEmail(sanitized);
       setErrors((prev) => ({ ...prev, email: error }));
     }
   }, [touched.email, validateEmail]);
 
   /**
-   * Handle phone input change
+   * Handle phone input change with sanitization
+   * SECURITY: Sanitizes input immediately to prevent XSS
    */
   const handlePhoneChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-    const value = e.target.value;
-    setPhone(value);
+    const rawValue = e.target.value;
+    const sanitized = sanitizePhone(rawValue);
+    setPhone(sanitized);
 
     if (touched.phone) {
-      const error = validatePhone(value);
+      const error = validatePhone(sanitized);
       setErrors((prev) => ({ ...prev, phone: error }));
     }
   }, [touched.phone, validatePhone]);
@@ -206,7 +199,6 @@ const LeadCapture = (): JSX.Element => {
   const handleBlur = useCallback((field: 'name' | 'email' | 'phone'): void => {
     setTouched((prev) => ({ ...prev, [field]: true }));
 
-    // Validate on blur
     let error = '';
     if (field === 'name') error = validateName(name);
     if (field === 'email') error = validateEmail(email);
@@ -220,7 +212,6 @@ const LeadCapture = (): JSX.Element => {
    * @returns Complete assessment data for API submission
    */
   const buildAssessmentData = useCallback((): AssessmentData => {
-    // Load data from localStorage
     let conditions: string[] = [];
     let sensations: string[] = [];
     let previousTreatments: string[] = [];
@@ -229,14 +220,14 @@ const LeadCapture = (): JSX.Element => {
       const savedConditions = localStorage.getItem('selected_conditions');
       if (savedConditions) conditions = JSON.parse(savedConditions);
     } catch (error) {
-      // Silent fail
+      conditions = [];
     }
 
     try {
       const savedSensations = localStorage.getItem('selected_sensations');
       if (savedSensations) sensations = JSON.parse(savedSensations);
     } catch (error) {
-      // Silent fail
+      sensations = [];
     }
 
     try {
@@ -246,7 +237,7 @@ const LeadCapture = (): JSX.Element => {
         previousTreatments = data.selectedTreatments || [];
       }
     } catch (error) {
-      // Silent fail
+      previousTreatments = [];
     }
 
     return {
@@ -260,9 +251,9 @@ const LeadCapture = (): JSX.Element => {
       urgency: state.response.urgencyLevel || undefined,
       activityImpact: state.response.dailyImpact || undefined,
       goals: state.response.additionalInfo || undefined,
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.replace(/\D/g, ''),
+      name: sanitizeName(name.trim(), 100),
+      email: sanitizeEmail(email.trim()),
+      phone: sanitizePhone(phone).replace(/\D/g, ''),
       completedAt: new Date().toISOString(),
     };
   }, [state.response, name, email, phone]);
@@ -273,12 +264,9 @@ const LeadCapture = (): JSX.Element => {
   const handleSubmit = useCallback(async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
-    // Mark all fields as touched
     setTouched({ name: true, email: true, phone: true });
 
-    // Validate form
     if (!validateForm()) {
-      // Announce errors to screen readers
       const errorMessage = Object.values(errors).filter(Boolean).join(', ');
       if (errorMessage) {
         const announcement = document.createElement('div');
@@ -292,34 +280,25 @@ const LeadCapture = (): JSX.Element => {
       return;
     }
 
-    // Update context with contact info
     updateResponse({
       completedAt: new Date().toISOString(),
     });
 
-    // Set loading state
     setSubmissionState('loading');
 
     try {
-      // Build assessment data
       const assessmentData = buildAssessmentData();
-
-      // Submit to API
       const response = await submitAssessment(assessmentData);
 
       if (response.success) {
-        // Success state with animation
         setSubmissionState('success');
 
-        // Navigate after animation
         setTimeout(() => {
           navigate('/final-video');
         }, 2000);
       } else {
-        // Error state
         setSubmissionState('error');
 
-        // Reset after delay
         setTimeout(() => {
           setSubmissionState('idle');
         }, 3000);
@@ -327,7 +306,6 @@ const LeadCapture = (): JSX.Element => {
     } catch (error) {
       setSubmissionState('error');
 
-      // Reset after delay
       setTimeout(() => {
         setSubmissionState('idle');
       }, 3000);
@@ -347,7 +325,6 @@ const LeadCapture = (): JSX.Element => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Header */}
         <motion.div
           className={styles.header}
           initial={{ opacity: 0, y: -20 }}
@@ -358,7 +335,6 @@ const LeadCapture = (): JSX.Element => {
           <p className={styles.subtext}>Let's Schedule Your Discovery Call</p>
         </motion.div>
 
-        {/* Introduction */}
         <motion.p
           className={styles.introduction}
           initial={{ opacity: 0 }}
@@ -368,7 +344,6 @@ const LeadCapture = (): JSX.Element => {
           To get started with your personalized Cellular Repair plan, we just need a bit of info
         </motion.p>
 
-        {/* Form */}
         <motion.form
           className={styles.form}
           onSubmit={handleSubmit}
@@ -377,7 +352,6 @@ const LeadCapture = (): JSX.Element => {
           transition={{ duration: 0.5, delay: 0.3 }}
           noValidate
         >
-          {/* Name Field */}
           <div className={styles.formField}>
             <label htmlFor="name" className={styles.label}>
               Name <span className={styles.required} aria-label="required">*</span>
@@ -426,7 +400,6 @@ const LeadCapture = (): JSX.Element => {
             </AnimatePresence>
           </div>
 
-          {/* Email Field */}
           <div className={styles.formField}>
             <label htmlFor="email" className={styles.label}>
               Email <span className={styles.required} aria-label="required">*</span>
@@ -475,7 +448,6 @@ const LeadCapture = (): JSX.Element => {
             </AnimatePresence>
           </div>
 
-          {/* Phone Field */}
           <div className={styles.formField}>
             <label htmlFor="phone" className={styles.label}>
               Phone <span className={styles.required} aria-label="required">*</span>
@@ -524,7 +496,6 @@ const LeadCapture = (): JSX.Element => {
             </AnimatePresence>
           </div>
 
-          {/* Privacy Notice */}
           <motion.div
             className={styles.privacyNotice}
             initial={{ opacity: 0 }}
@@ -553,7 +524,6 @@ const LeadCapture = (): JSX.Element => {
             </p>
           </motion.div>
 
-          {/* Submit Button */}
           <div className={styles.submitSection}>
             <AnimatePresence mode="wait">
               {submissionState === 'loading' && (

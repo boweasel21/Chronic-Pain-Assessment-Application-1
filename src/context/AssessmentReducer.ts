@@ -8,7 +8,7 @@ import {
   AssessmentAction,
   AssessmentActionType,
   AssessmentResponse,
-} from '@types/index';
+} from '@types';
 
 /**
  * Total number of assessment pages

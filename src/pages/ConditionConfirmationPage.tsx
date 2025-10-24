@@ -14,12 +14,13 @@ import {
   SENSATIONS,
   getSensationsByIds,
   type Sensation,
-} from '../../../data/sensations';
+} from '@data/sensations';
 import {
   getConditionById,
   isConditionTreatable,
   type Condition,
-} from '../../../data/conditions';
+} from '@data/conditions';
+import { type SensationType } from '@types';
 import styles from './ConditionConfirmationPage.module.css';
 
 /**
@@ -71,7 +72,7 @@ const ConditionConfirmationPage: React.FC = () => {
 
         setTreatableConditionNames(treatableNames);
 
-        if (treatableNames.length > 0) {
+        if (treatableNames.length > 0 && treatableNames[0]) {
           setPrimaryCondition(treatableNames[0]);
         }
       }
@@ -122,8 +123,14 @@ const ConditionConfirmationPage: React.FC = () => {
       return;
     }
 
+    // Map sensation IDs to Sensation objects and filter out any undefined values
+    const sensationObjects: Sensation[] = getSensationsByIds(selectedSensations);
+
+    // Convert to SensationType array (the IDs)
+    const sensationTypes: string[] = sensationObjects.map(s => s.id);
+
     updateResponse({
-      sensations: selectedSensations as any,
+      sensations: sensationTypes as SensationType[],
     });
 
     try {
@@ -299,7 +306,7 @@ const ConditionConfirmationPage: React.FC = () => {
           </p>
 
           <div className={styles.confirmation__sensationsGrid}>
-            {SENSATIONS.map((sensation) => (
+            {SENSATIONS.map((sensation: Sensation) => (
               <div key={sensation.id} className={styles.confirmation__sensationItem}>
                 <Checkbox
                   id={`sensation-${sensation.id}`}

@@ -9,7 +9,7 @@ import {
   AssessmentResponse,
   AssessmentActionType,
   PersonalizationResult,
-} from '@types/index';
+} from '@types';
 import { assessmentReducer, initialState } from './AssessmentReducer';
 
 /**

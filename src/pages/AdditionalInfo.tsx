@@ -8,14 +8,17 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAssessment } from '@context/AssessmentContext';
 import { Button } from '@components/common/Button';
+import { sanitizeText } from '../../utils/sanitizer';
 import styles from './AdditionalInfo.module.css';
 
 /**
  * Additional Information Page Component
  *
  * @description Final assessment page with optional textarea for additional context.
- * Features auto-save to localStorage and animated processing message.
+ * Features input sanitization, character limit, and animated processing message.
  * Routes to results page on completion.
+ *
+ * SECURITY: All textarea input is sanitized to prevent XSS attacks.
  *
  * @returns {JSX.Element} Additional information page
  */
@@ -36,9 +39,11 @@ const AdditionalInfo = (): JSX.Element => {
     if (saved) {
       try {
         const data = JSON.parse(saved);
-        setAdditionalInfo(data.additionalInfo || '');
+        const loadedInfo = data.additionalInfo || '';
+        const sanitized = sanitizeText(loadedInfo, MAX_CHARS);
+        setAdditionalInfo(sanitized);
       } catch (error) {
-        // Silent fail - invalid JSON
+        setAdditionalInfo('');
       }
     }
   }, []);
@@ -63,21 +68,33 @@ const AdditionalInfo = (): JSX.Element => {
   }, [additionalInfo]);
 
   /**
-   * Handle textarea change with character limit
+   * Handle textarea change with character limit and sanitization
+   *
+   * @description Sanitizes textarea input to prevent XSS attacks while preserving
+   * line breaks. Enforces character limit.
+   *
+   * SECURITY: All input is sanitized before updating state.
    */
   const handleChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>): void => {
-    const value = event.target.value;
-    if (value.length <= MAX_CHARS) {
-      setAdditionalInfo(value);
+    const rawValue = event.target.value;
+
+    if (rawValue.length <= MAX_CHARS) {
+      const sanitized = sanitizeText(rawValue, MAX_CHARS);
+      setAdditionalInfo(sanitized);
     }
   }, []);
 
   /**
-   * Handle navigation to results page
+   * Handle navigation to results page with final sanitization
+   *
+   * @description Sanitizes the additional info one final time before submission.
+   * SECURITY: Ensures sanitized data is submitted to context.
    */
   const handleViewResults = useCallback((): void => {
+    const sanitized = sanitizeText(additionalInfo.trim(), MAX_CHARS);
+
     updateResponse({
-      additionalInfo: additionalInfo.trim() || null,
+      additionalInfo: sanitized || null,
       completedAt: new Date().toISOString(),
     });
 

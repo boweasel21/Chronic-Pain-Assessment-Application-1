@@ -1,12 +1,16 @@
 /**
  * Assessment Layout Component
  * Provides consistent layout structure for all assessment pages
+ * with accessibility improvements including focus management and live regions
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAssessmentResponse } from '@context/AssessmentContext';
+import { useSkipLink } from '@hooks/useAccessibility';
 import ProgressBar from './ProgressBar';
+import MainContent from './MainContent';
+import LiveRegion from '@components/common/LiveRegion';
 
 /**
  * Layout props
@@ -49,6 +53,10 @@ const ROUTE_PAGE_MAP: Record<string, number> = {
 const AssessmentLayout: React.FC<AssessmentLayoutProps> = ({ children }) => {
   const location = useLocation();
   const response = useAssessmentResponse();
+  const [liveMessage, setLiveMessage] = useState<string>('');
+
+  // Initialize skip link functionality
+  useSkipLink();
 
   // Determine current page based on route
   const currentPage = ROUTE_PAGE_MAP[location.pathname] ?? 1;
@@ -57,6 +65,17 @@ const AssessmentLayout: React.FC<AssessmentLayoutProps> = ({ children }) => {
   // Don't show progress bar on disqualified or results pages
   const showProgress =
     location.pathname !== '/disqualified' && location.pathname !== '/results';
+
+  /**
+   * Announce page changes to screen readers
+   */
+  useEffect(() => {
+    if (showProgress) {
+      setLiveMessage(`Step ${currentPage} of ${totalPages}`);
+    } else {
+      setLiveMessage('');
+    }
+  }, [currentPage, totalPages, showProgress]);
 
   return (
     <div style={styles.container}>
@@ -85,10 +104,13 @@ const AssessmentLayout: React.FC<AssessmentLayoutProps> = ({ children }) => {
         )}
       </header>
 
-      {/* Main Content */}
-      <main id="main-content" style={styles.main} role="main">
+      {/* Main Content - Using MainContent component for accessibility */}
+      <MainContent id="main-content" style={styles.main}>
         <div style={styles.content}>{children}</div>
-      </main>
+      </MainContent>
+
+      {/* Live Region for screen reader announcements */}
+      <LiveRegion message={liveMessage} priority="polite" clearDelay={3000} />
 
       {/* Footer */}
       <footer style={styles.footer} role="contentinfo">

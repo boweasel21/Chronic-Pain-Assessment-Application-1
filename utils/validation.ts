@@ -8,6 +8,12 @@ import {
   ERROR_MESSAGES,
   PAGES,
 } from './constants';
+import {
+  sanitizeEmail,
+  sanitizePhone,
+  sanitizeName,
+  sanitizeText,
+} from './sanitizer';
 
 /**
  * Validation result interface
@@ -39,64 +45,75 @@ export interface AssessmentResponses {
 
 /**
  * Validates email address format
- * @param email - Email address to validate
- * @returns True if email is valid
+ *
+ * @description Sanitizes and validates email address format.
+ * SECURITY: Sanitizes input before validation to prevent injection attacks.
+ *
+ * @param {string} email - Email address to validate
+ * @returns {boolean} True if email is valid after sanitization
  */
 export const validateEmail = (email: string): boolean => {
   if (!email || typeof email !== 'string') {
     return false;
   }
 
-  const trimmedEmail = email.trim();
+  const sanitized = sanitizeEmail(email);
 
-  if (trimmedEmail.length === 0) {
+  if (sanitized.length === 0) {
     return false;
   }
 
-  return VALIDATION_RULES.EMAIL_REGEX.test(trimmedEmail);
+  return VALIDATION_RULES.EMAIL_REGEX.test(sanitized);
 };
 
 /**
  * Validates phone number format
- * @param phone - Phone number to validate
- * @returns True if phone is valid
+ *
+ * @description Sanitizes and validates phone number format.
+ * SECURITY: Sanitizes input before validation to prevent injection attacks.
+ *
+ * @param {string} phone - Phone number to validate
+ * @returns {boolean} True if phone is valid after sanitization
  */
 export const validatePhone = (phone: string): boolean => {
   if (!phone || typeof phone !== 'string') {
     return false;
   }
 
-  const trimmedPhone = phone.trim();
+  const sanitized = sanitizePhone(phone);
 
-  if (trimmedPhone.length === 0) {
+  if (sanitized.length === 0) {
     return false;
   }
 
-  // Remove all non-digit characters for length check
-  const digitsOnly = trimmedPhone.replace(/\D/g, '');
+  const digitsOnly = sanitized.replace(/\D/g, '');
 
   if (digitsOnly.length < VALIDATION_RULES.PHONE_MIN_LENGTH) {
     return false;
   }
 
-  return VALIDATION_RULES.PHONE_REGEX.test(trimmedPhone);
+  return VALIDATION_RULES.PHONE_REGEX.test(sanitized);
 };
 
 /**
  * Validates name format
- * @param name - Name to validate
- * @returns True if name is valid
+ *
+ * @description Sanitizes and validates name format.
+ * SECURITY: Sanitizes input before validation to prevent injection attacks.
+ *
+ * @param {string} name - Name to validate
+ * @returns {boolean} True if name is valid after sanitization
  */
 export const validateName = (name: string): boolean => {
   if (!name || typeof name !== 'string') {
     return false;
   }
 
-  const trimmedName = name.trim();
+  const sanitized = sanitizeName(name, VALIDATION_RULES.NAME_MAX_LENGTH);
 
   if (
-    trimmedName.length < VALIDATION_RULES.NAME_MIN_LENGTH ||
-    trimmedName.length > VALIDATION_RULES.NAME_MAX_LENGTH
+    sanitized.length < VALIDATION_RULES.NAME_MIN_LENGTH ||
+    sanitized.length > VALIDATION_RULES.NAME_MAX_LENGTH
   ) {
     return false;
   }

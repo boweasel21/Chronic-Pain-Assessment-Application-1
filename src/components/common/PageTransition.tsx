@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { usePrefersReducedMotion } from '@hooks/useAccessibility';
 
 /**
  * PageTransition component props interface
@@ -96,8 +97,14 @@ export const PageTransition = ({
   className = ''
 }: PageTransitionProps): JSX.Element => {
   /**
+   * Check if user prefers reduced motion using custom hook
+   * This hook automatically subscribes to media query changes
+   */
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  /**
    * Animation variants for page transitions
-   * Respects reduced motion preference
+   * Full animation with slide and fade
    */
   const pageVariants: Variants = {
     initial: {
@@ -125,7 +132,8 @@ export const PageTransition = ({
   };
 
   /**
-   * Reduced motion variants (no movement, just fade)
+   * Reduced motion variants (no movement, instant fade)
+   * Respects user's accessibility preferences
    */
   const reducedMotionVariants: Variants = {
     initial: {
@@ -146,15 +154,6 @@ export const PageTransition = ({
         }
       : undefined
   };
-
-  /**
-   * Detect if user prefers reduced motion
-   * Note: This is a basic implementation. In production, you might want to
-   * use a hook that subscribes to media query changes.
-   */
-  const prefersReducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /**
    * Select appropriate variants based on motion preference

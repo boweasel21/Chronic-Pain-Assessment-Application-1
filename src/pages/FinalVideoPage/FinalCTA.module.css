@@ -1,0 +1,49 @@
+/**
+ * FinalCTA Component Styles
+ * Final call-to-action section
+ */
+
+.ctaSection {
+  margin-bottom: 48px;
+}
+
+.ctaCard {
+  text-align: center;
+}
+
+.ctaHeading {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  color: white;
+  margin: 0 0 16px 0;
+  line-height: 1.3;
+}
+
+.ctaText {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 24px 0;
+  line-height: 1.6;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+  .ctaSection {
+    margin-bottom: 32px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .ctaCard {
+    background: white;
+    color: rgba(29, 44, 73, 1);
+  }
+
+  .ctaHeading,
+  .ctaText {
+    color: rgba(29, 44, 73, 1);
+  }
+}

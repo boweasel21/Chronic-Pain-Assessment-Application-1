@@ -2,9 +2,21 @@
  * API service utility for Primary Cell Assessment
  * Handles all API communication with type-safe error handling
  * Designed for Emergent.sh backend integration
+ *
+ * Security Features:
+ * - CSRF token protection for all state-changing requests
+ * - Automatic token refresh on 403 Forbidden responses
+ * - Secure token storage in memory (not localStorage)
  */
 
 import type { AssessmentResponse } from '../types';
+import {
+  fetchCsrfToken,
+  getCsrfToken,
+  clearCsrfToken,
+  refreshCsrfToken,
+  CsrfError,
+} from '../src/utils/csrfToken';
 
 /**
  * Environment configuration
@@ -24,6 +36,9 @@ export enum ApiErrorCode {
   SERVER_ERROR = 'SERVER_ERROR',
   NOT_FOUND = 'NOT_FOUND',
   UNAUTHORIZED = 'UNAUTHORIZED',
+  FORBIDDEN = 'FORBIDDEN',
+  CSRF_TOKEN_MISSING = 'CSRF_TOKEN_MISSING',
+  CSRF_TOKEN_INVALID = 'CSRF_TOKEN_INVALID',
   RATE_LIMIT = 'RATE_LIMIT',
   UNKNOWN_ERROR = 'UNKNOWN_ERROR',
 }
@@ -225,7 +240,41 @@ const isRetryableError = (error: unknown): boolean => {
 };
 
 /**
- * Type-safe fetch wrapper with error handling and retry logic
+ * Gets CSRF token for request, fetching if needed
+ * @returns CSRF token or null if fetch fails
+ */
+const getCsrfTokenForRequest = async (): Promise<string | null> => {
+  try {
+    // Try to get cached token first
+    let token = getCsrfToken();
+
+    // If no valid cached token, fetch new one
+    if (!token) {
+      token = await fetchCsrfToken();
+    }
+
+    return token;
+  } catch (error) {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.error('[API] Failed to get CSRF token:', error);
+    }
+    return null;
+  }
+};
+
+/**
+ * Determines if request method requires CSRF protection
+ * @param method - HTTP method
+ * @returns True if method is state-changing (POST, PUT, DELETE, PATCH)
+ */
+const requiresCsrfToken = (method: string = 'GET'): boolean => {
+  const stateChangingMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
+  return stateChangingMethods.includes(method.toUpperCase());
+};
+
+/**
+ * Type-safe fetch wrapper with error handling, retry logic, and CSRF protection
  * @param url - API endpoint URL
  * @param options - Fetch options
  * @param retryConfig - Retry configuration
@@ -243,15 +292,29 @@ const apiFetch = async <T>(
     const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
 
     try {
+      // Add CSRF token for state-changing requests
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        ...(options.headers as Record<string, string>),
+      };
+
+      if (requiresCsrfToken(options.method)) {
+        const csrfToken = await getCsrfTokenForRequest();
+        if (csrfToken) {
+          headers['X-CSRF-Token'] = csrfToken;
+        } else if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.warn('[API] CSRF token unavailable for state-changing request');
+        }
+      }
+
       logRequest(options.method || 'GET', url, options.body);
 
       const response = await fetch(url, {
         ...options,
         signal: controller.signal,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
+        credentials: 'include', // Important: Include cookies for session-based CSRF
+        headers,
       });
 
       clearTimeout(timeoutId);
@@ -262,6 +325,46 @@ const apiFetch = async <T>(
         response.status,
         response.ok
       );
+
+      // Handle 403 Forbidden - likely CSRF token issue
+      if (response.status === 403) {
+        const errorData = await response.json().catch(() => ({}));
+
+        // Check if it's a CSRF token error
+        const isCsrfError =
+          errorData.code === 'CSRF_TOKEN_INVALID' ||
+          errorData.code === 'CSRF_TOKEN_MISSING' ||
+          errorData.message?.toLowerCase().includes('csrf');
+
+        if (isCsrfError && requiresCsrfToken(options.method)) {
+          // Try to refresh token and retry once
+          if (attempt === 0) {
+            try {
+              await refreshCsrfToken();
+              // Retry the request with new token
+              continue;
+            } catch (csrfError) {
+              if (import.meta.env.DEV) {
+                // eslint-disable-next-line no-console
+                console.error('[API] CSRF token refresh failed:', csrfError);
+              }
+            }
+          }
+
+          return {
+            success: false,
+            error: 'Security token expired. Please refresh the page and try again.',
+            code: ApiErrorCode.CSRF_TOKEN_INVALID,
+          };
+        }
+
+        // Other 403 errors
+        return {
+          success: false,
+          error: errorData.error || errorData.message || 'Access forbidden',
+          code: ApiErrorCode.FORBIDDEN,
+        };
+      }
 
       // Handle non-OK responses
       if (!response.ok) {
@@ -275,7 +378,7 @@ const apiFetch = async <T>(
           errorData
         );
 
-        // Don't retry client errors (4xx)
+        // Don't retry client errors (4xx) except 403 (handled above)
         if (response.status >= 400 && response.status < 500) {
           return {
             success: false,
@@ -289,6 +392,13 @@ const apiFetch = async <T>(
 
       // Parse successful response
       const data = await response.json();
+
+      // Check if server sent a new CSRF token in response
+      const newCsrfToken = response.headers.get('X-CSRF-Token');
+      if (newCsrfToken) {
+        const { setCsrfToken } = await import('../src/utils/csrfToken');
+        setCsrfToken(newCsrfToken);
+      }
 
       return {
         success: true,
@@ -352,6 +462,8 @@ const mapHttpStatusToErrorCode = (status: number): ApiErrorCode => {
       return ApiErrorCode.VALIDATION_ERROR;
     case 401:
       return ApiErrorCode.UNAUTHORIZED;
+    case 403:
+      return ApiErrorCode.FORBIDDEN;
     case 404:
       return ApiErrorCode.NOT_FOUND;
     case 429:
@@ -534,3 +646,47 @@ export const batchOperations = async <T>(
     };
   });
 };
+
+/**
+ * Initializes CSRF protection by fetching initial token
+ * Should be called when application starts
+ * @returns Promise that resolves when CSRF token is ready
+ */
+export const initializeCsrfProtection = async (): Promise<void> => {
+  try {
+    await fetchCsrfToken();
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.info('[API] CSRF protection initialized');
+    }
+  } catch (error) {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.error('[API] Failed to initialize CSRF protection:', error);
+    }
+    // Don't throw - app should still work, just without CSRF protection
+  }
+};
+
+/**
+ * Clears all security tokens (call on logout)
+ * @returns void
+ */
+export const clearSecurityTokens = (): void => {
+  clearCsrfToken();
+  if (import.meta.env.DEV) {
+    // eslint-disable-next-line no-console
+    console.info('[API] Security tokens cleared');
+  }
+};
+
+/**
+ * Re-exports CSRF utilities for convenience
+ */
+export {
+  fetchCsrfToken,
+  getCsrfToken,
+  clearCsrfToken,
+  refreshCsrfToken,
+  CsrfError,
+} from '../src/utils/csrfToken';

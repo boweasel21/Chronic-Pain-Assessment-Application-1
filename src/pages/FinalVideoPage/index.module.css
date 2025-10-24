@@ -1,0 +1,52 @@
+/**
+ * FinalVideoPage Main Styles
+ * Orchestration component styles
+ */
+
+.container {
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(226, 211, 163, 0.1) 0%, rgba(255, 255, 255, 1) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+  .container {
+    padding: 16px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .container {
+    padding: 32px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .container {
+    padding: 48px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .container {
+    background: white;
+  }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: linear-gradient(135deg, rgba(29, 44, 73, 0.2) 0%, rgba(17, 24, 39, 1) 100%);
+  }
+}
