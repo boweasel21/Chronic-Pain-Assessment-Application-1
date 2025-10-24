@@ -35,6 +35,11 @@ export default defineConfig({
     strictPort: false,
     host: true,
     open: true,
+    allowedHosts: [
+      '.preview.emergentagent.com',
+      '.emergent.sh',
+      'localhost',
+    ],
   },
 
   build: {
