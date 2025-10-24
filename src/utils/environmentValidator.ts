@@ -58,9 +58,14 @@ const hasValue = (value: string | undefined): boolean => {
 };
 
 /**
- * Validate URL format
+ * Validate URL format (allows both absolute URLs and relative paths)
  */
 const isValidUrl = (url: string): boolean => {
+  // Allow relative paths for Kubernetes ingress routing
+  if (url.startsWith('/')) {
+    return true;
+  }
+  
   try {
     const urlObj = new URL(url);
     // Ensure it has a valid protocol
