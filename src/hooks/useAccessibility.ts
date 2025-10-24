@@ -171,7 +171,7 @@ export const usePageFocus = (elementId: string = 'main-content'): void => {
         });
       } else {
         // Log warning in development mode
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.DEV) {
           console.warn(
             `usePageFocus: Element with id "${elementId}" not found. ` +
             `Ensure the element exists and has tabIndex={-1} attribute.`
