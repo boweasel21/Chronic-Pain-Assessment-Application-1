@@ -1,0 +1,314 @@
+/**
+ * FormField Component Styles
+ *
+ * BEM naming: .formField, .formField--variant, .formField__element
+ * All spacing follows 8px grid system
+ * Floating label animation on focus/fill
+ */
+
+.formField {
+  /* Base container */
+  position: relative;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+/**
+ * Input wrapper
+ * Contains input and animated elements
+ */
+.formField__inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+/**
+ * Label
+ * Animates to top when input is focused or filled
+ */
+.formField__label {
+  /* Positioning - absolute to allow animation */
+  position: absolute;
+  left: 16px;
+  top: 16px;
+
+  /* Typography */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: #737373;
+
+  /* Interaction */
+  pointer-events: none;
+  user-select: none;
+
+  /* Transform origin for scale animation */
+  transform-origin: left center;
+
+  /* Ensure label is above input */
+  z-index: 1;
+
+  /* Smooth transition */
+  transition: color 150ms ease-out;
+}
+
+.formField__required {
+  color: #EF4444;
+  margin-left: 4px;
+}
+
+/**
+ * Input field
+ */
+.formField__input {
+  /* Layout */
+  width: 100%;
+  min-height: 56px;
+  padding: 24px 16px 8px 16px;
+
+  /* Typography */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  line-height: 1.5;
+  color: rgba(29, 44, 73, 1);
+
+  /* Visual */
+  background-color: transparent;
+  border: 2px solid rgba(226, 211, 163, 1);
+  border-radius: 8px;
+
+  /* Remove default styles */
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* Transitions */
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+/* Placeholder (only shown when focused) */
+.formField__input::placeholder {
+  color: #A3A3A3;
+  opacity: 1;
+}
+
+/* Focus state */
+.formField__input:focus {
+  border-color: rgba(29, 44, 73, 1);
+  box-shadow: 0 0 0 1px rgba(29, 44, 73, 0.1);
+}
+
+/* Focus-visible for keyboard navigation */
+.formField__input:focus-visible {
+  outline: 3px solid rgba(226, 211, 163, 1);
+  outline-offset: 2px;
+}
+
+/* Hover state */
+.formField__input:hover:not(:disabled):not(:focus) {
+  border-color: rgba(29, 44, 73, 0.6);
+}
+
+/**
+ * Animated border bottom
+ * 2px navy line that scales in on focus
+ */
+.formField__borderBottom {
+  /* Positioning */
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+
+  /* Size */
+  height: 2px;
+
+  /* Color */
+  background-color: rgba(29, 44, 73, 1);
+
+  /* Transform origin for scale animation */
+  transform-origin: center;
+
+  /* Ensure it's above the input border */
+  z-index: 2;
+
+  /* Rounded ends */
+  border-radius: 2px;
+}
+
+/**
+ * Error state
+ */
+.formField--error .formField__input {
+  border-color: #EF4444;
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.formField--error .formField__input:focus {
+  border-color: #EF4444;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2);
+}
+
+.formField--error .formField__borderBottom {
+  background-color: #EF4444;
+}
+
+/**
+ * Error message
+ */
+.formField__error {
+  /* Layout */
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+
+  /* Typography */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  line-height: 1.5;
+  color: #EF4444;
+}
+
+.formField__errorIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/**
+ * Helper text
+ */
+.formField__helper {
+  /* Layout */
+  margin-top: 8px;
+  margin-bottom: 0;
+
+  /* Typography */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  line-height: 1.5;
+  color: #737373;
+}
+
+/**
+ * Disabled state
+ */
+.formField--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.formField--disabled .formField__input {
+  cursor: not-allowed;
+  background-color: #F5F5F5;
+}
+
+/**
+ * Focused state modifier (for container)
+ */
+.formField--focused .formField__input {
+  border-color: rgba(29, 44, 73, 1);
+}
+
+/**
+ * Responsive adjustments
+ */
+
+/* Mobile - adjust padding and spacing */
+@media (max-width: 640px) {
+  .formField {
+    margin-bottom: 20px;
+  }
+
+  .formField__input {
+    min-height: 60px;
+    padding: 26px 14px 10px 14px;
+  }
+
+  .formField__label {
+    left: 14px;
+    top: 18px;
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .formField__input {
+    padding: 24px 20px 8px 20px;
+  }
+
+  .formField__label {
+    left: 20px;
+  }
+}
+
+/**
+ * Reduced motion support
+ * Disable animations for users who prefer reduced motion
+ */
+@media (prefers-reduced-motion: reduce) {
+  .formField__label {
+    transition: none;
+  }
+
+  .formField__input {
+    transition: none;
+  }
+
+  .formField__borderBottom {
+    transition: none;
+  }
+
+  .formField__error {
+    transition: none;
+  }
+}
+
+/**
+ * High contrast mode support
+ */
+@media (prefers-contrast: high) {
+  .formField__input {
+    border-width: 3px;
+  }
+
+  .formField__input:focus-visible {
+    outline-width: 4px;
+  }
+
+  .formField__borderBottom {
+    height: 3px;
+  }
+}
+
+/**
+ * Autofill styles
+ * Prevent browser autofill from breaking the floating label
+ */
+.formField__input:-webkit-autofill,
+.formField__input:-webkit-autofill:hover,
+.formField__input:-webkit-autofill:focus {
+  -webkit-text-fill-color: rgba(29, 44, 73, 1);
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/**
+ * Print styles
+ */
+@media print {
+  .formField__input {
+    border: 2px solid rgba(29, 44, 73, 1);
+    background: white;
+  }
+
+  .formField__borderBottom {
+    display: none;
+  }
+
+  .formField__error {
+    color: black;
+  }
+}

@@ -1,0 +1,239 @@
+/**
+ * Checkbox Component Styles
+ *
+ * BEM naming: .checkbox, .checkbox--variant, .checkbox__element
+ * All spacing follows 8px grid system
+ * Touch target minimum 44x44px for accessibility
+ */
+
+.checkbox {
+  /* Base container */
+  position: relative;
+  width: 100%;
+}
+
+.checkbox__wrapper {
+  /* Layout */
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+}
+
+/**
+ * Hidden native input
+ * Visually hidden but accessible to screen readers
+ */
+.checkbox__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/**
+ * Custom checkbox box
+ * 44x44px minimum touch target with 24x24px visual size
+ */
+.checkbox__box {
+  /* Layout - centered 24px box inside 44px touch target */
+  position: relative;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+
+  /* Visual */
+  border: 2px solid rgba(226, 211, 163, 1);
+  border-radius: 4px;
+  background-color: transparent;
+
+  /* Interaction */
+  cursor: pointer;
+  user-select: none;
+
+  /* Touch target expansion */
+  padding: 10px;
+  margin: -10px;
+
+  /* Ensure at least 44x44px clickable area */
+  min-width: 44px;
+  min-height: 44px;
+
+  /* Center the visual box */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Transitions */
+  transition: border-color 150ms ease-out, background-color 150ms ease-out;
+}
+
+/* Focus state - WCAG AA compliant */
+.checkbox__input:focus-visible + .checkbox__box {
+  outline: 3px solid rgba(226, 211, 163, 1);
+  outline-offset: 2px;
+}
+
+/* Hover state */
+.checkbox__box:hover:not(.checkbox--disabled .checkbox__box) {
+  border-color: rgba(29, 44, 73, 0.8);
+  background-color: rgba(226, 211, 163, 0.05);
+}
+
+/**
+ * Checkmark icon
+ */
+.checkbox__checkmark {
+  /* Positioning */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* Size */
+  width: 16px;
+  height: 16px;
+
+  /* Ensure it's above the background */
+  z-index: 1;
+
+  /* Prevent pointer events on the SVG itself */
+  pointer-events: none;
+}
+
+/**
+ * Label and description container
+ */
+.checkbox__content {
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+
+  /* Align with checkbox center */
+  padding-top: 2px;
+}
+
+.checkbox__label {
+  /* Typography */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(29, 44, 73, 1);
+
+  /* Interaction */
+  cursor: pointer;
+  user-select: none;
+
+  /* Remove default label spacing */
+  margin: 0;
+  padding: 0;
+}
+
+.checkbox__description {
+  /* Typography */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  line-height: 1.5;
+  color: #737373;
+
+  /* Remove default paragraph spacing */
+  margin: 0;
+  padding: 0;
+}
+
+/**
+ * Disabled state
+ */
+.checkbox--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkbox--disabled .checkbox__box {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.checkbox--disabled .checkbox__label {
+  cursor: not-allowed;
+}
+
+/**
+ * Responsive adjustments
+ */
+
+/* Mobile - ensure adequate spacing */
+@media (max-width: 640px) {
+  .checkbox__wrapper {
+    gap: 16px;
+  }
+
+  .checkbox__box {
+    /* Ensure 48x48px touch target on mobile */
+    min-width: 48px;
+    min-height: 48px;
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .checkbox__content {
+    gap: 6px;
+  }
+}
+
+/**
+ * Reduced motion support
+ * Disable animations for users who prefer reduced motion
+ */
+@media (prefers-reduced-motion: reduce) {
+  .checkbox__box {
+    transition: none;
+  }
+
+  /* Checkmark appears instantly without animation */
+  .checkbox__checkmark {
+    transition: none;
+  }
+}
+
+/**
+ * High contrast mode support
+ */
+@media (prefers-contrast: high) {
+  .checkbox__box {
+    border-width: 3px;
+  }
+
+  .checkbox__input:focus-visible + .checkbox__box {
+    outline-width: 4px;
+  }
+
+  .checkbox__checkmark path {
+    stroke-width: 3;
+  }
+}
+
+/**
+ * Print styles
+ */
+@media print {
+  .checkbox__box {
+    border: 2px solid rgba(29, 44, 73, 1);
+    background: transparent;
+  }
+
+  /* Show checkmark for checked boxes */
+  .checkbox__input:checked + .checkbox__box .checkbox__checkmark {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}

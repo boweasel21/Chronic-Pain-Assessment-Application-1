@@ -1,0 +1,584 @@
+/**
+ * Condition Confirmation Page Styles
+ *
+ * Mobile-first responsive design (320px+)
+ * BEM naming convention
+ * 8px grid system for spacing
+ * WCAG 2.1 AA compliant colors and contrast
+ */
+
+.confirmation {
+  /* Layout */
+  width: 100%;
+  min-height: 100vh;
+
+  /* Visual */
+  background-color: #F7F4ED;
+
+  /* Typography */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: rgba(29, 44, 73, 1);
+}
+
+/**
+ * Progress Bar Container
+ */
+.confirmation__progress {
+  /* Layout */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  /* Visual */
+  background-color: #FFFFFF;
+  padding: 16px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/**
+ * Main Container
+ */
+.confirmation__container {
+  /* Layout */
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 20px 80px 20px;
+}
+
+/**
+ * Header with Positive Reinforcement
+ */
+.confirmation__header {
+  /* Layout */
+  text-align: center;
+  margin-bottom: 48px;
+  padding: 40px 24px;
+
+  /* Visual */
+  background: linear-gradient(135deg, rgba(56, 161, 105, 0.1) 0%, rgba(56, 161, 105, 0.05) 100%);
+  border-radius: 16px;
+  border: 2px solid rgba(56, 161, 105, 0.3);
+}
+
+.confirmation__badge {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 24px auto;
+
+  /* Visual */
+  background-color: #38A169;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(56, 161, 105, 0.3);
+
+  /* Typography */
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.confirmation__title {
+  /* Typography */
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+
+  /* Spacing */
+  margin: 0 0 16px 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+.confirmation__subtitle {
+  /* Typography */
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.6;
+
+  /* Spacing */
+  margin: 0 auto;
+  max-width: 700px;
+
+  /* Color */
+  color: rgba(29, 44, 73, 0.85);
+}
+
+/**
+ * Selected Conditions Section
+ */
+.confirmation__conditions {
+  /* Layout */
+  margin-bottom: 48px;
+  padding: 32px 24px;
+
+  /* Visual */
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 211, 163, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.confirmation__conditionsTitle {
+  /* Typography */
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.3;
+
+  /* Spacing */
+  margin: 0 0 24px 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+.confirmation__conditionsList {
+  /* Layout */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  /* Spacing */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.confirmation__conditionItem {
+  /* Layout */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+
+  /* Visual */
+  background-color: rgba(226, 211, 163, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(226, 211, 163, 0.3);
+}
+
+.confirmation__conditionIcon {
+  /* Typography */
+  font-size: 1.5rem;
+  line-height: 1;
+
+  /* Color */
+  color: #38A169;
+}
+
+.confirmation__conditionName {
+  /* Typography */
+  font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+  font-weight: 500;
+  line-height: 1.4;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+/**
+ * Practitioner Review Notice
+ */
+.confirmation__review {
+  /* Layout */
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 48px;
+  padding: 24px;
+
+  /* Visual */
+  background-color: rgba(49, 130, 206, 0.1);
+  border-radius: 12px;
+  border-left: 4px solid #3182CE;
+}
+
+.confirmation__reviewIcon {
+  /* Typography */
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.confirmation__reviewText {
+  /* Typography */
+  font-size: clamp(0.9375rem, 2vw, 1rem);
+  font-weight: 400;
+  line-height: 1.6;
+
+  /* Spacing */
+  margin: 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 0.85);
+}
+
+/**
+ * Sensations Section
+ */
+.confirmation__sensations {
+  /* Spacing */
+  margin-bottom: 40px;
+}
+
+.confirmation__sensationsTitle {
+  /* Typography */
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.3;
+
+  /* Spacing */
+  margin: 0 0 12px 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+.confirmation__sensationsHelp {
+  /* Typography */
+  font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.6;
+
+  /* Spacing */
+  margin: 0 0 32px 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 0.7);
+}
+
+.confirmation__sensationsGrid {
+  /* Layout */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  /* Visual */
+  padding: 24px;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 211, 163, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.confirmation__sensationItem {
+  /* Layout */
+  display: block;
+}
+
+.confirmation__minimumHelper {
+  /* Typography */
+  font-size: clamp(0.875rem, 1.5vw, 0.9375rem);
+  font-weight: 400;
+  line-height: 1.5;
+
+  /* Spacing */
+  margin: 0;
+  padding: 16px 20px;
+
+  /* Visual */
+  background-color: rgba(226, 211, 163, 0.2);
+  border-radius: 8px;
+  border-left: 4px solid rgba(226, 211, 163, 1);
+
+  /* Color */
+  color: rgba(29, 44, 73, 0.85);
+}
+
+.confirmation__minimumHelper strong {
+  font-weight: 600;
+  color: rgba(29, 44, 73, 1);
+}
+
+/**
+ * Actions Section
+ */
+.confirmation__actions {
+  /* Layout */
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+/**
+ * Toast Notification
+ */
+.confirmation__toast {
+  /* Layout */
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  max-width: 500px;
+  width: calc(100% - 40px);
+
+  /* Layout - Flexbox */
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+
+  /* Visual */
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  border: 2px solid #ED8936;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.confirmation__toastIcon {
+  /* Typography */
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.confirmation__toastContent {
+  /* Layout */
+  flex: 1;
+}
+
+.confirmation__toastTitle {
+  /* Typography */
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: 600;
+  line-height: 1.4;
+
+  /* Spacing */
+  margin: 0 0 4px 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+.confirmation__toastMessage {
+  /* Typography */
+  font-size: clamp(0.875rem, 1.5vw, 0.9375rem);
+  font-weight: 400;
+  line-height: 1.5;
+
+  /* Spacing */
+  margin: 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 0.85);
+}
+
+.confirmation__toastClose {
+  /* Layout */
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Visual */
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  /* Typography */
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(29, 44, 73, 0.6);
+
+  /* Transition */
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+
+  /* Remove default button styles */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.confirmation__toastClose:hover {
+  background-color: rgba(226, 211, 163, 0.2);
+  color: rgba(29, 44, 73, 1);
+}
+
+.confirmation__toastClose:focus-visible {
+  outline: 2px solid rgba(226, 211, 163, 1);
+  outline-offset: 2px;
+}
+
+/**
+ * Tablet Breakpoint (768px+)
+ */
+@media (min-width: 768px) {
+  .confirmation__progress {
+    padding: 20px 32px;
+  }
+
+  .confirmation__container {
+    padding: 48px 32px 96px 32px;
+  }
+
+  .confirmation__header {
+    padding: 56px 48px;
+    margin-bottom: 64px;
+  }
+
+  .confirmation__badge {
+    width: 80px;
+    height: 80px;
+    font-size: 2.5rem;
+    margin-bottom: 32px;
+  }
+
+  .confirmation__conditions {
+    padding: 40px 32px;
+    margin-bottom: 64px;
+  }
+
+  .confirmation__review {
+    padding: 32px;
+    margin-bottom: 64px;
+  }
+
+  .confirmation__sensationsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 32px;
+  }
+
+  .confirmation__actions {
+    margin-top: 64px;
+  }
+
+  .confirmation__toast {
+    max-width: 600px;
+    bottom: 32px;
+  }
+}
+
+/**
+ * Desktop Breakpoint (1024px+)
+ */
+@media (min-width: 1024px) {
+  .confirmation__container {
+    padding: 56px 40px 120px 40px;
+  }
+
+  .confirmation__header {
+    padding: 64px 56px;
+  }
+
+  .confirmation__conditions {
+    padding: 48px 40px;
+  }
+
+  .confirmation__review {
+    padding: 40px;
+  }
+
+  .confirmation__sensationsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    padding: 40px;
+  }
+}
+
+/**
+ * Reduced Motion
+ */
+@media (prefers-reduced-motion: reduce) {
+  .confirmation__toast {
+    transition: none;
+  }
+
+  .confirmation__toastClose {
+    transition: none;
+  }
+}
+
+/**
+ * High Contrast Mode
+ */
+@media (prefers-contrast: high) {
+  .confirmation__header {
+    border-width: 3px;
+  }
+
+  .confirmation__conditions {
+    border-width: 2px;
+    border-color: rgba(29, 44, 73, 1);
+  }
+
+  .confirmation__conditionItem {
+    border-width: 2px;
+    border-color: rgba(29, 44, 73, 1);
+  }
+
+  .confirmation__toast {
+    border-width: 3px;
+  }
+
+  .confirmation__toastClose:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/**
+ * Print Styles
+ */
+@media print {
+  .confirmation {
+    background-color: white;
+  }
+
+  .confirmation__progress,
+  .confirmation__actions,
+  .confirmation__toast {
+    display: none;
+  }
+
+  .confirmation__header,
+  .confirmation__conditions,
+  .confirmation__review,
+  .confirmation__sensationsGrid {
+    box-shadow: none;
+    border: 1px solid rgba(29, 44, 73, 1);
+    page-break-inside: avoid;
+  }
+
+  .confirmation__header {
+    background: white;
+  }
+
+  .confirmation__badge {
+    background-color: white;
+    border: 2px solid rgba(29, 44, 73, 1);
+    color: rgba(29, 44, 73, 1);
+  }
+}
+
+/**
+ * Accessibility - Screen Reader Only
+ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/**
+ * Focus Visible Enhancements
+ */
+.confirmation__conditionItem:focus-visible {
+  outline: 3px solid rgba(226, 211, 163, 1);
+  outline-offset: 2px;
+}

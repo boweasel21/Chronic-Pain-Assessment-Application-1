@@ -1,0 +1,553 @@
+/**
+ * Cellular Science Page Styles
+ *
+ * Mobile-first responsive design (320px+)
+ * BEM naming convention
+ * 8px grid system for spacing
+ * WCAG 2.1 AA compliant colors and contrast
+ */
+
+.cellular {
+  /* Layout */
+  width: 100%;
+  min-height: 100vh;
+
+  /* Visual */
+  background-color: #F7F4ED;
+
+  /* Typography */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: rgba(29, 44, 73, 1);
+}
+
+/**
+ * Progress Bar Container
+ */
+.cellular__progress {
+  /* Layout */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  /* Visual */
+  background-color: #FFFFFF;
+  padding: 16px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/**
+ * Main Container
+ */
+.cellular__container {
+  /* Layout */
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 20px 80px 20px;
+}
+
+/**
+ * Header
+ */
+.cellular__header {
+  /* Spacing */
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.cellular__title {
+  /* Typography */
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+
+  /* Spacing */
+  margin: 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+/**
+ * Science Section (RNA Storage)
+ */
+.cellular__science {
+  /* Layout */
+  margin-bottom: 40px;
+  padding: 32px 24px;
+
+  /* Visual */
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 211, 163, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.cellular__scienceTitle {
+  /* Typography */
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.3;
+
+  /* Spacing */
+  margin: 0 0 20px 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+.cellular__scienceContent {
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cellular__scienceText {
+  /* Typography */
+  font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.7;
+
+  /* Spacing */
+  margin: 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 0.85);
+}
+
+/**
+ * Primary Cell Section
+ */
+.cellular__primary {
+  /* Layout */
+  margin-bottom: 48px;
+  padding: 32px 24px;
+
+  /* Visual */
+  background: linear-gradient(135deg, rgba(29, 44, 73, 0.05) 0%, rgba(226, 211, 163, 0.1) 100%);
+  border-radius: 12px;
+  border: 2px solid rgba(226, 211, 163, 0.5);
+}
+
+.cellular__primaryTitle {
+  /* Typography */
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.3;
+
+  /* Spacing */
+  margin: 0 0 20px 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+.cellular__primaryContent {
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cellular__primaryText {
+  /* Typography */
+  font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.7;
+
+  /* Spacing */
+  margin: 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 0.85);
+}
+
+/**
+ * Conditions Section
+ */
+.cellular__conditions {
+  /* Spacing */
+  margin-bottom: 40px;
+}
+
+.cellular__conditionsTitle {
+  /* Typography */
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+
+  /* Spacing */
+  margin: 0 0 32px 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+/**
+ * Collapsible Sections
+ */
+.cellular__section {
+  /* Layout */
+  margin-bottom: 24px;
+
+  /* Visual */
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 211, 163, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.cellular__sectionHeader {
+  /* Layout */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 24px;
+
+  /* Visual */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  /* Transition */
+  transition: background-color 150ms ease-out;
+
+  /* Remove default button styles */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-align: left;
+}
+
+.cellular__sectionHeader:hover {
+  background-color: rgba(226, 211, 163, 0.1);
+}
+
+.cellular__sectionHeader:focus-visible {
+  outline: 3px solid rgba(226, 211, 163, 1);
+  outline-offset: -3px;
+}
+
+.cellular__sectionTitle {
+  /* Typography */
+  font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+  font-weight: 600;
+  line-height: 1.3;
+
+  /* Spacing */
+  margin: 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+.cellular__expandIcon {
+  /* Typography */
+  font-size: 1.25rem;
+  line-height: 1;
+
+  /* Color */
+  color: rgba(29, 44, 73, 0.6);
+
+  /* Transition */
+  transition: transform 200ms ease-out;
+  display: inline-block;
+}
+
+.cellular__expandIcon--expanded {
+  transform: rotate(180deg);
+}
+
+.cellular__sectionContent {
+  /* Layout */
+  overflow: hidden;
+}
+
+/**
+ * Checkbox Grid
+ */
+.cellular__checkboxGrid {
+  /* Layout */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 24px;
+
+  /* Visual */
+  border-top: 1px solid rgba(226, 211, 163, 0.3);
+}
+
+/**
+ * Other Conditions Textarea
+ */
+.cellular__other {
+  /* Layout */
+  margin-top: 32px;
+  padding: 24px;
+
+  /* Visual */
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 211, 163, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.cellular__otherLabel {
+  /* Typography */
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: 600;
+  line-height: 1.4;
+
+  /* Layout */
+  display: block;
+  margin-bottom: 12px;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+.cellular__otherTextarea {
+  /* Layout */
+  width: 100%;
+  padding: 12px 16px;
+  box-sizing: border-box;
+
+  /* Typography */
+  font-family: inherit;
+  font-size: clamp(0.9375rem, 2vw, 1rem);
+  font-weight: 400;
+  line-height: 1.6;
+
+  /* Visual */
+  background-color: #FFFFFF;
+  border: 2px solid rgba(226, 211, 163, 0.5);
+  border-radius: 8px;
+  resize: vertical;
+
+  /* Transition */
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+
+  /* Color */
+  color: rgba(29, 44, 73, 1);
+}
+
+.cellular__otherTextarea::placeholder {
+  color: rgba(29, 44, 73, 0.5);
+}
+
+.cellular__otherTextarea:focus {
+  outline: none;
+  border-color: rgba(29, 44, 73, 1);
+  box-shadow: 0 0 0 3px rgba(226, 211, 163, 0.3);
+}
+
+.cellular__otherTextarea:focus-visible {
+  outline: 3px solid rgba(226, 211, 163, 1);
+  outline-offset: 2px;
+}
+
+.cellular__otherHelp {
+  /* Typography */
+  font-size: clamp(0.8125rem, 1.5vw, 0.9375rem);
+  font-weight: 400;
+  line-height: 1.5;
+  font-style: italic;
+
+  /* Spacing */
+  margin: 8px 0 0 0;
+
+  /* Color */
+  color: rgba(29, 44, 73, 0.6);
+}
+
+/**
+ * Validation Error
+ */
+.cellular__error {
+  /* Layout */
+  margin-top: 16px;
+  padding: 16px 20px;
+
+  /* Visual */
+  background-color: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #EF4444;
+  border-radius: 4px;
+
+  /* Typography */
+  font-size: clamp(0.9375rem, 2vw, 1rem);
+  font-weight: 500;
+  line-height: 1.5;
+
+  /* Color */
+  color: #DC2626;
+}
+
+/**
+ * Actions Section
+ */
+.cellular__actions {
+  /* Layout */
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+/**
+ * Tablet Breakpoint (768px+)
+ */
+@media (min-width: 768px) {
+  .cellular__progress {
+    padding: 20px 32px;
+  }
+
+  .cellular__container {
+    padding: 48px 32px 96px 32px;
+  }
+
+  .cellular__header {
+    margin-bottom: 56px;
+  }
+
+  .cellular__science,
+  .cellular__primary {
+    padding: 40px 32px;
+  }
+
+  .cellular__science {
+    margin-bottom: 48px;
+  }
+
+  .cellular__primary {
+    margin-bottom: 64px;
+  }
+
+  .cellular__checkboxGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 32px;
+  }
+
+  .cellular__other {
+    padding: 32px;
+  }
+
+  .cellular__actions {
+    margin-top: 64px;
+  }
+}
+
+/**
+ * Desktop Breakpoint (1024px+)
+ */
+@media (min-width: 1024px) {
+  .cellular__container {
+    padding: 56px 40px 120px 40px;
+  }
+
+  .cellular__science,
+  .cellular__primary {
+    padding: 48px 40px;
+  }
+
+  .cellular__checkboxGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 40px;
+  }
+
+  .cellular__other {
+    padding: 40px;
+  }
+}
+
+/**
+ * Reduced Motion
+ */
+@media (prefers-reduced-motion: reduce) {
+  .cellular__expandIcon {
+    transition: none;
+  }
+
+  .cellular__sectionHeader {
+    transition: none;
+  }
+
+  .cellular__otherTextarea {
+    transition: none;
+  }
+}
+
+/**
+ * High Contrast Mode
+ */
+@media (prefers-contrast: high) {
+  .cellular__science,
+  .cellular__primary,
+  .cellular__section,
+  .cellular__other {
+    border-width: 2px;
+    border-color: rgba(29, 44, 73, 1);
+  }
+
+  .cellular__sectionHeader:focus-visible {
+    outline-width: 4px;
+  }
+
+  .cellular__otherTextarea:focus-visible {
+    outline-width: 4px;
+  }
+}
+
+/**
+ * Print Styles
+ */
+@media print {
+  .cellular {
+    background-color: white;
+  }
+
+  .cellular__progress {
+    display: none;
+  }
+
+  .cellular__science,
+  .cellular__primary,
+  .cellular__section,
+  .cellular__other {
+    box-shadow: none;
+    border: 1px solid rgba(29, 44, 73, 1);
+    page-break-inside: avoid;
+  }
+
+  .cellular__expandIcon {
+    display: none;
+  }
+
+  .cellular__sectionContent {
+    height: auto !important;
+    opacity: 1 !important;
+  }
+
+  .cellular__actions {
+    display: none;
+  }
+}
+
+/**
+ * Accessibility - Screen Reader Only
+ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
