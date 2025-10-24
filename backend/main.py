@@ -14,7 +14,8 @@ import uvicorn
 
 from app.config import settings
 from app.routers import assessment, email, health
-from app.middleware import rate_limiter, request_logger
+from app.middleware.rate_limiter import rate_limiter
+from app.middleware import request_logger
 from app.database import init_db
 
 # Initialize FastAPI app
