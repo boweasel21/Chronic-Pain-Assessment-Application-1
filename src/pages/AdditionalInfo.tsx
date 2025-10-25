@@ -135,7 +135,7 @@ const AdditionalInfo = (): JSX.Element => {
               ⚙️
             </motion.div>
             <h1 className={styles.processingTitle}>
-              Your Personalized Pain Pattern Profile is being generated...
+              Your Personalized Pain Pattern Profile is ready…
             </h1>
           </div>
         </motion.div>
@@ -147,10 +147,7 @@ const AdditionalInfo = (): JSX.Element => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <h2 className={styles.question}>Anything else we should know?</h2>
-          <p className={styles.questionSubtext}>
-            Share any additional context that might help us understand your situation better (optional)
-          </p>
+          <h2 className={styles.question}>Is there anything else you'd like us to know?</h2>
         </motion.div>
 
         {/* Textarea */}
@@ -183,19 +180,6 @@ const AdditionalInfo = (): JSX.Element => {
             </div>
           </div>
         </motion.div>
-
-        {/* Helper Text */}
-        <motion.div
-          className={styles.helperSection}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-        >
-          <p className={styles.helperText}>
-            💡 <strong>Tip:</strong> The more details you provide, the more personalized your results will be
-          </p>
-        </motion.div>
-
         {/* Navigation */}
         <motion.div
           className={styles.navigation}
@@ -207,10 +191,10 @@ const AdditionalInfo = (): JSX.Element => {
             variant="primary"
             size="large"
             onClick={handleViewResults}
-            aria-label="View your personalized results"
+            aria-label="Go to your personalized results"
             fullWidth
           >
-            View My Results
+            Next Page
           </Button>
         </motion.div>
       </div>

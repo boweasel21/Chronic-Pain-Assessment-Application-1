@@ -3,7 +3,7 @@
  * Collects information about treatments attempted for chronic pain
  */
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAssessment } from '@context/AssessmentContext';
@@ -44,7 +44,7 @@ const CATEGORIES: readonly CategoryConfig[] = [
   {
     id: 'therapies',
     emoji: '🧘',
-    title: 'Therapies & Lifestyle',
+    title: 'Therapies, Bodywork & Lifestyle',
     category: 'therapies',
   },
   {
@@ -98,13 +98,6 @@ const TreatmentHistory = (): JSX.Element => {
     };
     localStorage.setItem('assessment_treatment_history', JSON.stringify(data));
   }, [selectedTreatments, otherTreatments]);
-
-  /**
-   * Calculate total selected treatments count
-   */
-  const totalSelected = useMemo(() => {
-    return selectedTreatments.length;
-  }, [selectedTreatments]);
 
   /**
    * Get count of selected treatments per category
@@ -165,10 +158,10 @@ const TreatmentHistory = (): JSX.Element => {
             transition={{ duration: 0.5 }}
           >
             <h1 className={styles.title}>
-              System is running your Personalized Pain Pattern Profile...
+              Our system is now running your Personalized Pain Pattern Profile to determine if we believe we can help you.
             </h1>
             <p className={styles.subtitle}>
-              While that's processing, learn more about you
+              While that’s being generated, we’d like to learn more about you.
             </p>
           </motion.div>
         </header>
@@ -181,19 +174,8 @@ const TreatmentHistory = (): JSX.Element => {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <h2 className={styles.questionText}>
-            Please check everything you have tried to fix your chronic pain
+            Please check everything you have tried to fix your chronic pain.
           </h2>
-
-          {totalSelected > 0 && (
-            <motion.p
-              className={styles.selectedCount}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-              {totalSelected} {totalSelected === 1 ? 'treatment' : 'treatments'} selected
-            </motion.p>
-          )}
         </motion.div>
 
         {/* Treatment Categories */}
@@ -275,19 +257,18 @@ const TreatmentHistory = (): JSX.Element => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.5 }}
         >
-          <label htmlFor="other-treatments" className={styles.otherLabel}>
-            Other treatments not listed
-          </label>
-          <textarea
-            id="other-treatments"
-            className={styles.otherTextarea}
-            value={otherTreatments}
-            onChange={(e) => setOtherTreatments(e.target.value)}
-            placeholder="List any other treatments you've tried..."
-            rows={4}
-            aria-label="Other treatments not listed"
-          />
-        </motion.div>
+      <label htmlFor="other-treatments" className={styles.otherLabel}>
+        Others:
+      </label>
+      <textarea
+        id="other-treatments"
+        className={styles.otherTextarea}
+        value={otherTreatments}
+        onChange={(e) => setOtherTreatments(e.target.value)}
+        rows={4}
+        aria-label="Others"
+      />
+    </motion.div>
 
         {/* Navigation */}
         <motion.div
@@ -296,15 +277,15 @@ const TreatmentHistory = (): JSX.Element => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9, duration: 0.5 }}
         >
-          <Button
-            variant="primary"
-            size="large"
-            onClick={handleNext}
-            aria-label="Continue to urgency assessment"
-            fullWidth
-          >
-            Continue
-          </Button>
+      <Button
+        variant="primary"
+        size="large"
+        onClick={handleNext}
+        aria-label="Go to the next page of the assessment"
+        fullWidth
+      >
+        Next Page
+      </Button>
         </motion.div>
       </div>
     </div>

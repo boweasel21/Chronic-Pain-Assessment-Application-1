@@ -409,7 +409,7 @@ const generateTreatmentCards = (
     const whatItFixed = treatment.whatItFixed;
 
     // What it missed is always Primary Cell damage
-    const whatItMissed = 'Primary Cell damage - the underlying cellular dysfunction causing persistent symptoms';
+    const whatItMissed = 'Cellular damage in your Primary Cell';
 
     // Result is always temporary relief pattern
     const result = generateTreatmentResult(treatment, conditions);
@@ -435,28 +435,7 @@ const generateTreatmentResult = (
   treatment: Treatment,
   conditions: Array<{ id: string; name: string; category: string }>
 ): string => {
-  // Mind-body approaches have different result patterns
-  if (treatment.category === 'mindBody') {
-    return 'Helped manage symptoms and improve coping, but pain persisted at cellular level';
-  }
-
-  // Procedures typically have more dramatic but temporary results
-  if (treatment.category === 'procedures') {
-    return 'Temporary relief, but symptoms returned as Primary Cell damage remained unaddressed';
-  }
-
-  // Medications and devices typically provide ongoing but incomplete relief
-  if (treatment.category === 'medications' || treatment.category === 'devices') {
-    return 'Reduced pain signals temporarily, but did not address root cellular dysfunction';
-  }
-
-  // Therapies help with mobility and function but don't fix cellular issues
-  if (treatment.category === 'therapies') {
-    return 'Improved mobility and function, but underlying cellular damage continued causing pain';
-  }
-
-  // Default
-  return 'Provided temporary symptom relief without addressing Primary Cell damage';
+  return 'Temporary relief then pain returned.';
 };
 
 /**

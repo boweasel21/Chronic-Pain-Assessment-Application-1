@@ -185,6 +185,14 @@
   color: rgba(29, 44, 73, 1);
 }
 
+.cellular__conditionsIntro {
+  font-size: clamp(0.95rem, 2.25vw, 1.1rem);
+  line-height: 1.6;
+  text-align: center;
+  margin: -16px 0 24px 0;
+  color: rgba(29, 44, 73, 0.85);
+}
+
 /**
  * Collapsible Sections
  */

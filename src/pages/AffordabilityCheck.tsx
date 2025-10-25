@@ -22,15 +22,15 @@ interface AffordabilityOption {
 
 const AFFORDABILITY_OPTIONS: readonly AffordabilityOption[] = [
   {
-    id: 'affordable',
-    label: "That's affordable for me",
-    description: 'I can budget $3,000 per area for this process',
+    id: 'yes',
+    label: 'Yes',
+    description: '',
     variant: 'primary',
   },
   {
-    id: 'need_to_think',
-    label: 'I need to think about it',
-    description: "I'd like to consider this investment further",
+    id: 'no',
+    label: 'No',
+    description: '',
     variant: 'secondary',
   },
 ] as const;
@@ -75,7 +75,7 @@ const AffordabilityCheck = (): JSX.Element => {
 
     updateResponse({
       affordabilityResponse: optionId,
-      affordabilityConfirmed: optionId === 'affordable',
+      affordabilityConfirmed: optionId === 'yes',
     });
 
     setTimeout(() => {
@@ -93,7 +93,9 @@ const AffordabilityCheck = (): JSX.Element => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className={styles.title}>Just One More Quick Question</h1>
+          <h1 className={styles.title}>
+            If you qualify and you want to work with us, for most clients our process is $3000 for each chronic pain area you want eliminated.
+          </h1>
         </motion.div>
 
         {/* Message */}
@@ -104,10 +106,7 @@ const AffordabilityCheck = (): JSX.Element => {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <div className={styles.messageCard}>
-            <p className={styles.message}>
-              Our process is <strong className={styles.price}>$3,000 per area</strong>.
-              How does that feel?
-            </p>
+            <p className={styles.message}>Is $3000 affordable to you at this time?</p>
           </div>
         </motion.div>
 
@@ -133,12 +132,11 @@ const AffordabilityCheck = (): JSX.Element => {
                     variant={option.variant}
                     size="large"
                     onClick={() => handleSelect(option.id)}
-                    aria-label={`${option.label}: ${option.description}`}
+                    aria-label={option.label}
                     fullWidth
                   >
                     <div className={styles.buttonContent}>
                       <span className={styles.buttonLabel}>{option.label}</span>
-                      <span className={styles.buttonDescription}>{option.description}</span>
                     </div>
                   </Button>
                 </motion.div>
@@ -146,18 +144,6 @@ const AffordabilityCheck = (): JSX.Element => {
             );
           })}
         </div>
-
-        {/* Info Note */}
-        <motion.div
-          className={styles.infoNote}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-        >
-          <p className={styles.infoText}>
-            Either way, we'll continue with your personalized assessment results
-          </p>
-        </motion.div>
       </div>
     </div>
   );

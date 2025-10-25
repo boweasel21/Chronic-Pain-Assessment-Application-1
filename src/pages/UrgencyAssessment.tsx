@@ -7,7 +7,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAssessment } from '@context/AssessmentContext';
-import { Button } from '@components/common/Button';
 import styles from './UrgencyAssessment.module.css';
 
 /**
@@ -23,20 +22,21 @@ interface UrgencyOption {
 const URGENCY_OPTIONS: readonly UrgencyOption[] = [
   {
     id: 'urgent',
-    label: 'I want to live a normal life ASAP',
-    description: 'My pain significantly impacts my daily life and I need relief as soon as possible',
+    label:
+      'Are you sick and tired of being sick and tired of your pain and ready to do something now, so long as it promotes good health, has no side effects, is non-invasive, and works?',
+    description: '',
     level: 'high',
   },
   {
     id: 'moderate',
-    label: "I'd like relief but not in emergency mode",
-    description: 'Pain management is important to me, but I can be patient with the process',
+    label: 'Frustrated by your pain, but not urgent--now is not the time.',
+    description: '',
     level: 'moderate',
   },
   {
     id: 'exploring',
-    label: "I'm exploring options, no time pressure",
-    description: "I'm gathering information and not in a rush to make immediate changes",
+    label: 'It would be nice to get rid of it, but it’s manageable; you can live with it.',
+    description: '',
     level: 'low',
   },
 ] as const;
@@ -54,7 +54,6 @@ const UrgencyAssessment = (): JSX.Element => {
   const { updateResponse } = useAssessment();
 
   const [selectedUrgency, setSelectedUrgency] = useState<string | null>(null);
-  const [validationError, setValidationError] = useState<string | null>(null);
 
   /**
    * Load saved data from localStorage on mount
@@ -84,29 +83,23 @@ const UrgencyAssessment = (): JSX.Element => {
   /**
    * Handle urgency selection
    */
-  const handleSelect = useCallback((optionId: string): void => {
-    setSelectedUrgency(optionId);
-    setValidationError(null);
-  }, []);
+  const handleSelect = useCallback(
+    (optionId: string): void => {
+      setSelectedUrgency(optionId);
 
-  /**
-   * Validate and navigate to next page
-   */
-  const handleNext = useCallback((): void => {
-    if (!selectedUrgency) {
-      setValidationError('Please select an urgency level to continue');
-      return;
-    }
+      const selectedOption = URGENCY_OPTIONS.find((opt) => opt.id === optionId);
 
-    const selectedOption = URGENCY_OPTIONS.find((opt) => opt.id === selectedUrgency);
+      updateResponse({
+        urgencyLevel: selectedOption?.level || null,
+        urgencySelection: optionId,
+      });
 
-    updateResponse({
-      urgencyLevel: selectedOption?.level || null,
-      urgencySelection: selectedUrgency,
-    });
-
-    navigate('/budget-qualification');
-  }, [selectedUrgency, updateResponse, navigate]);
+      setTimeout(() => {
+        navigate('/budget-qualification');
+      }, 250);
+    },
+    [updateResponse, navigate]
+  );
 
   /**
    * Handle keyboard navigation (Arrow keys)
@@ -129,7 +122,7 @@ const UrgencyAssessment = (): JSX.Element => {
           transition={{ duration: 0.5 }}
         >
           <h1 className={styles.question}>
-            How urgent is your need to be free of your chronic pain?
+            How urgent is your need to resolve your chronic pain issue?
           </h1>
         </motion.div>
 
@@ -180,44 +173,15 @@ const UrgencyAssessment = (): JSX.Element => {
                   {/* Content */}
                   <div className={styles.optionContent}>
                     <h3 className={styles.optionLabel}>{option.label}</h3>
-                    <p className={styles.optionDescription}>{option.description}</p>
+                    {option.description && (
+                      <p className={styles.optionDescription}>{option.description}</p>
+                    )}
                   </div>
                 </motion.button>
               </motion.div>
             );
           })}
         </div>
-
-        {/* Validation Error */}
-        {validationError && (
-          <motion.div
-            className={styles.error}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            role="alert"
-            aria-live="polite"
-          >
-            {validationError}
-          </motion.div>
-        )}
-
-        {/* Navigation */}
-        <motion.div
-          className={styles.navigation}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-        >
-          <Button
-            variant="primary"
-            size="large"
-            onClick={handleNext}
-            aria-label="Continue to budget qualification"
-            fullWidth
-          >
-            Continue
-          </Button>
-        </motion.div>
       </div>
     </div>
   );
