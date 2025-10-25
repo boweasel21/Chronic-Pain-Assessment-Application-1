@@ -172,7 +172,7 @@ const LandingPage: React.FC = () => {
         </h2>
 
         <p className={styles.landing__supportingCopy}>
-          Breakthrough peer-reviewed research has just confirmed what we&apos;ve been seeing in our clinic for years: chronic pain is literally stored inside your cells as damaged genetic material—and it can be repaired.
+          Breakthrough peer-reviewed research has just confirmed what we've been seeing in our clinic for years: chronic pain is literally stored inside your cells as damaged genetic material—and it can be repaired.
         </p>
 
         <h3 className={styles.landing__scienceLead}>
