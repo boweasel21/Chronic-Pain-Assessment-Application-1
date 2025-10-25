@@ -168,7 +168,7 @@ const LandingPage: React.FC = () => {
         </h1>
 
         <h2 className={styles.landing__subheadline}>
-          What if your chronic pain isn&apos;t a &ldquo;pain management&rdquo; problem... but a cellular repair problem?
+          What if your chronic pain isn't a "pain management" problem... but a cellular repair problem?
         </h2>
 
         <p className={styles.landing__supportingCopy}>
