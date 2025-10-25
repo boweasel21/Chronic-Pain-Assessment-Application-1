@@ -4,7 +4,7 @@
  * and ensure data integrity throughout the application.
  */
 
-import DOMPurify from 'dompurify';
+import * as DOMPurify from 'dompurify';
 
 /**
  * Sanitization configuration options
