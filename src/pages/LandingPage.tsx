@@ -176,7 +176,7 @@ const LandingPage: React.FC = () => {
         </p>
 
         <h3 className={styles.landing__scienceLead}>
-          Here&apos;s the science most doctors don&apos;t know about:
+          Here's the science most doctors don't know about:
         </h3>
         <p className={styles.landing__scienceCopy}>
           When you get injured, three types of damage occur simultaneously:
