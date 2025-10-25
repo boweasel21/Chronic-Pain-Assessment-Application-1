@@ -7,7 +7,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAssessment } from '@context/AssessmentContext';
-import { Button } from '@components/common/Button';
 import styles from './BudgetQualification.module.css';
 
 /**
@@ -23,27 +22,27 @@ interface BudgetOption {
 const BUDGET_OPTIONS: readonly BudgetOption[] = [
   {
     id: 'low',
-    label: '$0 - $3,000',
-    range: '$0 - $3,000',
-    description: 'Minimal annual out-of-pocket spending',
+    label: '$0-$3,000',
+    range: '$0-$3,000',
+    description: '',
   },
   {
-    id: 'medium',
-    label: '$3,000 - $10,000',
-    range: '$3,000 - $10,000',
-    description: 'Moderate annual investment in pain relief',
+    id: 'mid-1',
+    label: '$3,000-$5,000',
+    range: '$3,000-$5,000',
+    description: '',
+  },
+  {
+    id: 'mid-2',
+    label: '$5,000-$10,000',
+    range: '$5,000-$10,000',
+    description: '',
   },
   {
     id: 'high',
-    label: '$10,000 - $25,000',
-    range: '$10,000 - $25,000',
-    description: 'Significant annual investment in pain management',
-  },
-  {
-    id: 'premium',
-    label: '$25,000+',
-    range: '$25,000+',
-    description: 'Premium annual investment in comprehensive care',
+    label: '$10,000+',
+    range: '$10,000+',
+    description: '',
   },
 ] as const;
 
@@ -61,7 +60,6 @@ const BudgetQualification = (): JSX.Element => {
   const { updateResponse } = useAssessment();
 
   const [selectedBudget, setSelectedBudget] = useState<string | null>(null);
-  const [validationError, setValidationError] = useState<string | null>(null);
 
   /**
    * Load saved data from localStorage on mount
@@ -91,33 +89,25 @@ const BudgetQualification = (): JSX.Element => {
   /**
    * Handle budget selection
    */
-  const handleSelect = useCallback((optionId: string): void => {
-    setSelectedBudget(optionId);
-    setValidationError(null);
-  }, []);
+  const handleSelect = useCallback(
+    (optionId: string): void => {
+      setSelectedBudget(optionId);
 
-  /**
-   * Validate and navigate to appropriate next page
-   */
-  const handleNext = useCallback((): void => {
-    if (!selectedBudget) {
-      setValidationError('Please select a budget range to continue');
-      return;
-    }
+      const selectedOption = BUDGET_OPTIONS.find((opt) => opt.id === optionId);
 
-    const selectedOption = BUDGET_OPTIONS.find((opt) => opt.id === selectedBudget);
+      updateResponse({
+        currentBudget: selectedOption?.range || null,
+        budgetLevel: optionId,
+      });
 
-    updateResponse({
-      currentBudget: selectedOption?.range || null,
-      budgetLevel: selectedBudget,
-    });
+      const nextRoute = optionId === 'low' ? '/affordability' : '/additional-info';
 
-    if (selectedBudget === 'low') {
-      navigate('/affordability');
-    } else {
-      navigate('/additional-info');
-    }
-  }, [selectedBudget, updateResponse, navigate]);
+      setTimeout(() => {
+        navigate(nextRoute);
+      }, 250);
+    },
+    [updateResponse, navigate]
+  );
 
   /**
    * Handle keyboard navigation
@@ -140,11 +130,8 @@ const BudgetQualification = (): JSX.Element => {
           transition={{ duration: 0.5 }}
         >
           <h1 className={styles.question}>
-            How much do you currently pay out of pocket annually for pain relief?
+            On average, how much do you currently pay out of pocket on your chronic pain every year (deductible, etc.)?
           </h1>
-          <p className={styles.questionSubtext}>
-            This helps us understand your current investment in pain management
-          </p>
         </motion.div>
 
         {/* Budget Options */}
@@ -166,7 +153,7 @@ const BudgetQualification = (): JSX.Element => {
                   onKeyDown={(e) => handleKeyDown(e, option.id)}
                   role="radio"
                   aria-checked={isSelected}
-                  aria-label={`${option.label}: ${option.description}`}
+                  aria-label={option.label}
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.15 }}
@@ -194,7 +181,9 @@ const BudgetQualification = (): JSX.Element => {
                   {/* Content */}
                   <div className={styles.optionContent}>
                     <h3 className={styles.optionLabel}>{option.label}</h3>
-                    <p className={styles.optionDescription}>{option.description}</p>
+                    {option.description && (
+                      <p className={styles.optionDescription}>{option.description}</p>
+                    )}
                   </div>
 
                   {/* Checkmark for selected */}
@@ -214,37 +203,6 @@ const BudgetQualification = (): JSX.Element => {
             );
           })}
         </div>
-
-        {/* Validation Error */}
-        {validationError && (
-          <motion.div
-            className={styles.error}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            role="alert"
-            aria-live="polite"
-          >
-            {validationError}
-          </motion.div>
-        )}
-
-        {/* Navigation */}
-        <motion.div
-          className={styles.navigation}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-        >
-          <Button
-            variant="primary"
-            size="large"
-            onClick={handleNext}
-            aria-label="Continue to next step"
-            fullWidth
-          >
-            Continue
-          </Button>
-        </motion.div>
       </div>
     </div>
   );

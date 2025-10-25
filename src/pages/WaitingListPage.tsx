@@ -12,13 +12,14 @@ import styles from './WaitingListPage.module.css';
 /**
  * Form validation state
  */
-interface FormState {
+interface FormData {
+  name: string;
   email: string;
-  isValid: boolean;
-  error: string | null;
-  isSubmitting: boolean;
-  isSubmitted: boolean;
+  phone: string;
+  sixMonthDate: string;
 }
+
+type FormErrors = Partial<Record<keyof FormData, string>>;
 
 /**
  * Animation variants for the page
@@ -73,12 +74,17 @@ const successVariants = {
 const WaitingListPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const [formState, setFormState] = useState<FormState>({
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
     email: '',
-    isValid: false,
-    error: null,
+    phone: '',
+    sixMonthDate: '',
+  });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [submitState, setSubmitState] = useState({
     isSubmitting: false,
     isSubmitted: false,
+    submissionError: null as string | null,
   });
 
   /**
@@ -92,19 +98,47 @@ const WaitingListPage: React.FC = () => {
   };
 
   /**
-   * Handles email input change
-   * @param event - Change event from input
+   * Handles field changes and clears existing errors
    */
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const email = event.target.value;
-    const isValid = validateEmail(email);
+  const handleFieldChange =
+    (field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
 
-    setFormState((prev) => ({
-      ...prev,
-      email,
-      isValid,
-      error: email && !isValid ? 'Please enter a valid email address' : null,
-    }));
+      setFormData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+
+      setErrors((prev) => ({
+        ...prev,
+        [field]: undefined,
+      }));
+    };
+
+  /**
+   * Validates form data and returns field errors
+   */
+  const validateForm = (): FormErrors => {
+    const fieldErrors: FormErrors = {};
+
+    if (!formData.name.trim()) {
+      fieldErrors.name = 'Please enter your name.';
+    }
+
+    if (!formData.email.trim() || !validateEmail(formData.email)) {
+      fieldErrors.email = 'Please enter a valid email address.';
+    }
+
+    if (!formData.phone.trim()) {
+      fieldErrors.phone = 'Please enter your phone number.';
+    }
+
+    if (!formData.sixMonthDate) {
+      fieldErrors.sixMonthDate =
+        'Please tell us when it will be 6 months since your injury or surgery.';
+    }
+
+    return fieldErrors;
   };
 
   /**
@@ -114,32 +148,35 @@ const WaitingListPage: React.FC = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!formState.isValid) {
-      setFormState((prev) => ({
-        ...prev,
-        error: 'Please enter a valid email address',
-      }));
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
-    setFormState((prev) => ({ ...prev, isSubmitting: true, error: null }));
+    setSubmitState({
+      isSubmitting: true,
+      isSubmitted: false,
+      submissionError: null,
+    });
 
     try {
       // In production, this would call an API endpoint
       // For now, simulate API call with timeout
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      setFormState((prev) => ({
-        ...prev,
+      setErrors({});
+      setSubmitState({
         isSubmitting: false,
         isSubmitted: true,
-      }));
+        submissionError: null,
+      });
     } catch (error) {
-      setFormState((prev) => ({
-        ...prev,
+      setSubmitState({
         isSubmitting: false,
-        error: 'Something went wrong. Please try again.',
-      }));
+        isSubmitted: false,
+        submissionError: 'Something went wrong. Please try again.',
+      });
     }
   };
 
@@ -161,7 +198,7 @@ const WaitingListPage: React.FC = () => {
     >
       <div className={styles.container}>
         <AnimatePresence mode="wait">
-          {!formState.isSubmitted ? (
+          {!submitState.isSubmitted ? (
             <motion.div
               key="form"
               className={styles.content}
@@ -172,65 +209,31 @@ const WaitingListPage: React.FC = () => {
             >
               {/* Headline */}
               <motion.div variants={itemVariants}>
-                <h1 className={styles.headline}>Thank You for Your Interest</h1>
+                <h1 className={styles.headline}>
+                  If you’d like to be put on our waiting list, we can contact you once your chronic pain has been bothering you for a total of 6 months.
+                </h1>
               </motion.div>
 
               {/* Main Message */}
               <motion.div variants={itemVariants} className={styles.section}>
                 <p className={styles.bodyText}>
-                  Based on your responses, you've been experiencing pain for less than 6
-                  months. While we understand how challenging this is, we're not quite ready
-                  to help with acute pain at this stage.
+                  Please let us know below when it will be 6 months since your injury or surgery, and give us your name, email address, and number, and we’ll text you and let you know we emailed you with a link to this assessment. Thank you.
                 </p>
               </motion.div>
 
-              {/* Explanation */}
-              <motion.div variants={itemVariants} className={styles.explanationCard}>
-                <div className={styles.explanationIcon} aria-hidden="true">
-                  <svg
-                    width="48"
-                    height="48"
-                    viewBox="0 0 48 48"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M24 14v12l6 6"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <circle
-                      cx="24"
-                      cy="24"
-                      r="18"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      fill="none"
-                    />
-                  </svg>
-                </div>
-                <h2 className={styles.explanationTitle}>Why 6 Months?</h2>
-                <p className={styles.explanationText}>
-                  Our Cellular Repair Method works best when chronic patterns have formed in
-                  your nervous system and tissues. This typically happens after 6+ months of
-                  persistent pain. Acute pain (under 6 months) often responds well to
-                  conventional treatments and may still resolve naturally as your body
-                  completes its healing process.
-                </p>
-              </motion.div>
+              {/* Submission Error */}
+              {submitState.submissionError && (
+                <motion.div
+                  variants={itemVariants}
+                  className={styles.errorBanner}
+                  role="alert"
+                  aria-live="assertive"
+                >
+                  {submitState.submissionError}
+                </motion.div>
+              )}
 
-              {/* Call to Action */}
-              <motion.div variants={itemVariants} className={styles.section}>
-                <h3 className={styles.sectionTitle}>Join Our Waiting List</h3>
-                <p className={styles.bodyText}>
-                  If your pain persists beyond 6 months, we want to help. Leave your email,
-                  and we'll reach out when you qualify for our program.
-                </p>
-              </motion.div>
-
-              {/* Email Form */}
+              {/* Waiting List Form */}
               <motion.form
                 variants={itemVariants}
                 onSubmit={handleSubmit}
@@ -238,36 +241,106 @@ const WaitingListPage: React.FC = () => {
                 noValidate
               >
                 <div className={styles.formGroup}>
-                  <label htmlFor="email" className={styles.label}>
-                    Email Address
+                  <label htmlFor="six-month-date" className={styles.label}>
+                    When will it be 6 months since your injury or surgery?
                     <span className={styles.required} aria-label="required">
                       *
                     </span>
                   </label>
                   <input
-                    type="email"
+                    id="six-month-date"
+                    name="six-month-date"
+                    type="date"
+                    className={`${styles.input} ${
+                      errors.sixMonthDate ? styles.inputError : ''
+                    }`}
+                    value={formData.sixMonthDate}
+                    onChange={handleFieldChange('sixMonthDate')}
+                    disabled={submitState.isSubmitting}
+                    required
+                  />
+                  {errors.sixMonthDate && (
+                    <p className={styles.errorMessage} role="alert">
+                      {errors.sixMonthDate}
+                    </p>
+                  )}
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="name" className={styles.label}>
+                    Name
+                    <span className={styles.required} aria-label="required">
+                      *
+                    </span>
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
+                    value={formData.name}
+                    onChange={handleFieldChange('name')}
+                    placeholder="First and last name"
+                    disabled={submitState.isSubmitting}
+                    autoComplete="name"
+                    required
+                  />
+                  {errors.name && (
+                    <p className={styles.errorMessage} role="alert">
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="email" className={styles.label}>
+                    Email address
+                    <span className={styles.required} aria-label="required">
+                      *
+                    </span>
+                  </label>
+                  <input
                     id="email"
                     name="email"
-                    value={formState.email}
-                    onChange={handleEmailChange}
-                    className={`${styles.input} ${formState.error ? styles.inputError : ''}`}
-                    placeholder="your.email@example.com"
+                    type="email"
+                    className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
+                    placeholder="you@example.com"
+                    value={formData.email}
+                    onChange={handleFieldChange('email')}
+                    autoComplete="email"
+                    disabled={submitState.isSubmitting}
                     required
-                    aria-required="true"
-                    aria-invalid={!!formState.error}
-                    aria-describedby={formState.error ? 'email-error' : undefined}
-                    disabled={formState.isSubmitting}
                   />
-                  {formState.error && (
-                    <motion.p
-                      id="email-error"
-                      className={styles.errorMessage}
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      role="alert"
-                    >
-                      {formState.error}
-                    </motion.p>
+                  {errors.email && (
+                    <p id="email-error" className={styles.errorMessage} role="alert">
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="phone" className={styles.label}>
+                    Phone number
+                    <span className={styles.required} aria-label="required">
+                      *
+                    </span>
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
+                    placeholder="We’ll text you when it’s time"
+                    value={formData.phone}
+                    onChange={handleFieldChange('phone')}
+                    autoComplete="tel"
+                    disabled={submitState.isSubmitting}
+                    required
+                  />
+                  {errors.phone && (
+                    <p className={styles.errorMessage} role="alert">
+                      {errors.phone}
+                    </p>
                   )}
                 </div>
 
@@ -275,11 +348,12 @@ const WaitingListPage: React.FC = () => {
                   type="submit"
                   variant="primary"
                   size="large"
-                  disabled={!formState.isValid || formState.isSubmitting}
-                  aria-label="Join waiting list"
+                  disabled={submitState.isSubmitting}
+                  aria-label="Submit waiting list details"
                   fullWidth
                 >
-                  {formState.isSubmitting ? 'Joining...' : 'Join Waiting List'}
+                  {/* Proposed copy: Submit waiting list details */}
+                  {submitState.isSubmitting ? 'Submitting…' : 'Submit'}
                 </Button>
               </motion.form>
 
@@ -292,6 +366,7 @@ const WaitingListPage: React.FC = () => {
                   aria-label="Return to assessment start"
                   fullWidth
                 >
+                  {/* Proposed copy: Return to the assessment start */}
                   Return to Start
                 </Button>
               </motion.div>
@@ -325,14 +400,12 @@ const WaitingListPage: React.FC = () => {
               </div>
 
               {/* Success Message */}
-              <h2 className={styles.successHeadline}>You're on the List!</h2>
+              <h2 className={styles.successHeadline}>
+                {/* Proposed copy: Confirmation heading for waiting list */}
+                You’re on the waiting list.
+              </h2>
               <p className={styles.successText}>
-                Thank you for joining our waiting list. We've saved your email address and
-                will reach out in approximately 3-4 months to check on your progress.
-              </p>
-              <p className={styles.successText}>
-                If your pain persists at that time, we'll guide you through the next steps to
-                get the help you need.
+                We’ll text you and let you know we emailed you with a link to this assessment once you reach your 6-month mark.
               </p>
 
               <div className={styles.successActions}>
@@ -343,14 +416,10 @@ const WaitingListPage: React.FC = () => {
                   aria-label="Return to home page"
                   fullWidth
                 >
+                  {/* Proposed copy: Return to assessment start after confirmation */}
                   Return to Home
                 </Button>
               </div>
-
-              <p className={styles.successNote}>
-                In the meantime, conventional treatments may still help. Don't hesitate to
-                work with your healthcare provider on managing your pain.
-              </p>
             </motion.div>
           )}
         </AnimatePresence>

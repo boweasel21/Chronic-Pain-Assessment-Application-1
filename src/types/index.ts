@@ -141,6 +141,12 @@ export interface AssessmentResponse {
   affordabilityConfirmed?: boolean;
   additionalInfo?: string | null;
 
+  // Lead Capture
+  leadCaptureName?: string | null;
+  leadCaptureEmail?: string | null;
+  leadCapturePhone?: string | null;
+  disqualificationReason?: string | null;
+
   // Proof Offer Pages 11-12 Fields
   wantsHighlightsVideo?: boolean;
   wantsDemoVideo?: boolean;

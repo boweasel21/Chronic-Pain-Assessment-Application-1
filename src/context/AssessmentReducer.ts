@@ -192,6 +192,7 @@ export const assessmentReducer = (
           response: {
             ...state.response,
             qualificationStatus: 'disqualified',
+            disqualificationReason: action.payload,
             completedAt: new Date().toISOString(),
           },
           error: action.payload,

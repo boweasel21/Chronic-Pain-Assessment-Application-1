@@ -24,6 +24,24 @@ import { type SensationType } from '@types';
 import styles from './ConditionConfirmationPage.module.css';
 
 /**
+ * Formats an array of strings into a human-readable list with commas and "and"
+ */
+const formatList = (items: string[]): string => {
+  if (items.length === 0) {
+    return '';
+  }
+  if (items.length === 1) {
+    return items[0];
+  }
+  if (items.length === 2) {
+    return `${items[0]} and ${items[1]}`;
+  }
+  const allButLast = items.slice(0, -1).join(', ');
+  const last = items[items.length - 1];
+  return `${allButLast}, and ${last}`;
+};
+
+/**
  * Condition Confirmation Page Component
  *
  * @description Third page of assessment flow. Provides positive reinforcement
@@ -48,7 +66,7 @@ const ConditionConfirmationPage: React.FC = () => {
 
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
   const [treatableConditionNames, setTreatableConditionNames] = useState<string[]>([]);
-  const [primaryCondition, setPrimaryCondition] = useState<string>('your condition');
+  const [nonTreatableConditionNames, setNonTreatableConditionNames] = useState<string[]>([]);
   const [selectedSensations, setSelectedSensations] = useState<string[]>([]);
   const [showError, setShowError] = useState<boolean>(false);
   const [otherConditions, setOtherConditions] = useState<string>('');
@@ -72,9 +90,12 @@ const ConditionConfirmationPage: React.FC = () => {
 
         setTreatableConditionNames(treatableNames);
 
-        if (treatableNames.length > 0 && treatableNames[0]) {
-          setPrimaryCondition(treatableNames[0]);
-        }
+        const nonTreatableIds = conditions.filter((id) => !isConditionTreatable(id));
+        const nonTreatableNames = nonTreatableIds
+          .map((id) => getConditionById(id)?.name)
+          .filter((name): name is string => name !== undefined);
+
+        setNonTreatableConditionNames(nonTreatableNames);
       }
 
       if (savedOther) {
@@ -204,7 +225,16 @@ const ConditionConfirmationPage: React.FC = () => {
   /**
    * Determine if user needs practitioner review
    */
-  const needsPractitionerReview = otherConditions.trim().length > 0 && selectedConditions.length === 0;
+  const needsPractitionerReview =
+    otherConditions.trim().length > 0 && selectedConditions.length === 0;
+
+  const hasTreatable = treatableConditionNames.length > 0;
+  const hasNonTreatable = nonTreatableConditionNames.length > 0;
+  const treatableListText = formatList(treatableConditionNames);
+  const nonTreatableListText = formatList(nonTreatableConditionNames);
+  const treatableVerb = treatableConditionNames.length === 1 ? 'is' : 'are';
+  const nonTreatableVerb = nonTreatableConditionNames.length === 1 ? 'is' : 'are';
+  const questionConditionLabel = hasTreatable ? treatableListText : 'your condition';
 
   return (
     <div className={styles.confirmation}>
@@ -219,60 +249,53 @@ const ConditionConfirmationPage: React.FC = () => {
         animate="visible"
         variants={containerVariants}
       >
-        {/* Positive Reinforcement Header */}
+        {/* Introductory Copy */}
         <motion.header
           className={styles.confirmation__header}
           variants={itemVariants}
         >
-          <div className={styles.confirmation__badge} aria-hidden="true">
-            ✓
-          </div>
           <h1 className={styles.confirmation__title}>
-            Great News! We Can Help You
+            If you have landed on this page, it’s good news. It means you’re headed in the right direction.
           </h1>
           <p className={styles.confirmation__subtitle}>
-            Based on your selections, cellular repair therapy may be an effective
-            treatment option for you.
+            Roughly half of the selections you saw are chronic pain related to disease or pathogens, conditions we cannot remedy.
           </p>
         </motion.header>
 
-        {/* Selected Conditions Display */}
-        {treatableConditionNames.length > 0 && (
-          <motion.section
-            className={styles.confirmation__conditions}
-            variants={itemVariants}
-            aria-labelledby="selected-conditions-heading"
-          >
-            <h2 id="selected-conditions-heading" className={styles.confirmation__conditionsTitle}>
-              Your Selected Conditions:
-            </h2>
-            <ul className={styles.confirmation__conditionsList}>
-              {treatableConditionNames.map((name, index) => (
-                <motion.li
-                  key={index}
-                  className={styles.confirmation__conditionItem}
-                  variants={{
-                    hidden: { opacity: 0, x: -20 },
-                    visible: {
-                      opacity: 1,
-                      x: 0,
-                      transition: {
-                        duration: 0.4,
-                        delay: index * 0.1,
-                        ease: 'easeOut',
-                      },
-                    },
-                  }}
-                >
-                  <span className={styles.confirmation__conditionIcon} aria-hidden="true">
-                    •
-                  </span>
-                  <span className={styles.confirmation__conditionName}>{name}</span>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.section>
-        )}
+        <motion.section
+          className={styles.confirmation__intro}
+          variants={itemVariants}
+        >
+          {hasTreatable && (
+            <p className={styles.confirmation__introText}>
+              {treatableListText} {treatableVerb} good {treatableConditionNames.length === 1 ? 'candidate' : 'candidates'} for effectively repairing Primary Cell damage.
+            </p>
+          )}
+
+          {hasTreatable && hasNonTreatable && (
+            <>
+              <p className={styles.confirmation__introText}>
+                Unfortunately, {nonTreatableListText} {nonTreatableVerb} not good candidates for our process. These chronic pain conditions are associated with diseases and infections caused by pathogens that are beyond our reach.
+              </p>
+              <p className={styles.confirmation__introText}>
+                We apologize for that. But, {treatableListText} {treatableVerb} good {treatableConditionNames.length === 1 ? 'candidate' : 'candidates'}.
+              </p>
+            </>
+          )}
+
+          {!hasTreatable && needsPractitionerReview && (
+            <p className={styles.confirmation__introText}>
+              A practitioner will review what you shared to determine if it’s related to Primary Cell damage.
+            </p>
+          )}
+
+          <p className={styles.confirmation__introText}>
+            However, we’re not out of the woods...
+          </p>
+          <p className={styles.confirmation__introText}>
+            Below is a list of physical pain sensations associated with cellular damage.
+          </p>
+        </motion.section>
 
         {/* Practitioner Review Notice */}
         {needsPractitionerReview && (
@@ -286,8 +309,7 @@ const ConditionConfirmationPage: React.FC = () => {
               ℹ️
             </div>
             <p className={styles.confirmation__reviewText}>
-              Your condition will be reviewed by a practitioner to determine if cellular
-              repair therapy is appropriate for you.
+              A practitioner will review what you shared to determine if it’s related to Primary Cell damage. If you provide your contact information later in the assessment, we will contact you and let you know if you are a good candidate for our process.
             </p>
           </motion.aside>
         )}
@@ -299,10 +321,10 @@ const ConditionConfirmationPage: React.FC = () => {
           aria-labelledby="sensations-heading"
         >
           <h2 id="sensations-heading" className={styles.confirmation__sensationsTitle}>
-            What physical sensations are associated with {primaryCondition}?
+            What physical sensation(s) are associated with your {questionConditionLabel}?
           </h2>
           <p className={styles.confirmation__sensationsHelp}>
-            Select all that apply. This helps us understand your specific pain profile.
+            Please, check the boxes that apply:
           </p>
 
           <div className={styles.confirmation__sensationsGrid}>
@@ -319,11 +341,6 @@ const ConditionConfirmationPage: React.FC = () => {
               </div>
             ))}
           </div>
-
-          {/* Minimum Selection Helper */}
-          <p className={styles.confirmation__minimumHelper}>
-            <strong>Required:</strong> Select at least 1 sensation to continue
-          </p>
         </motion.section>
 
         {/* Submit Button */}
@@ -335,10 +352,10 @@ const ConditionConfirmationPage: React.FC = () => {
             variant="primary"
             size="large"
             onClick={handleSubmit}
-            aria-label="Continue to treatment history"
+            aria-label="Go to the next page of the assessment"
             fullWidth
           >
-            Continue
+            Next Page
           </Button>
         </motion.div>
       </motion.div>

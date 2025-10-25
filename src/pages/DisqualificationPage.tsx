@@ -59,6 +59,12 @@ const disqualificationReasons: Record<string, DisqualificationReason> = {
     bodyExplanation:
       'Your pain is related to active disease processes that need oncological management first and foremost.',
   },
+  'non-treatable': {
+    condition: 'Non-Treatable Condition',
+    explanation:
+      'We are sorry. We cannot help this condition. Unfortunately, many chronic pain conditions are associated with diseases and infections caused by pathogens that are beyond our reach.',
+    bodyExplanation: '',
+  },
   'acute-injury': {
     condition: 'Recent Acute Injury',
     explanation:
@@ -171,7 +177,7 @@ const DisqualificationPage: React.FC = () => {
   const response = useAssessmentResponse();
 
   // Get disqualification reason from context or use default
-  const reasonKey = getDisqualificationReasonKey(response);
+  const reasonKey = response.disqualificationReason || getDisqualificationReasonKey(response);
   const reasonData: DisqualificationReason =
     disqualificationReasons[reasonKey] || disqualificationReasons['no-diagnosis'];
   const resources = getAlternativeResources(reasonKey);
@@ -255,10 +261,12 @@ const DisqualificationPage: React.FC = () => {
           </motion.div>
 
           {/* Body Explanation */}
-          <motion.div variants={itemVariants} className={styles.section}>
-            <h3 className={styles.sectionTitle}>Here's what IS happening in your body...</h3>
-            <p className={styles.bodyText}>{reasonData.bodyExplanation}</p>
-          </motion.div>
+          {reasonData.bodyExplanation && (
+            <motion.div variants={itemVariants} className={styles.section}>
+              <h3 className={styles.sectionTitle}>Here's what IS happening in your body...</h3>
+              <p className={styles.bodyText}>{reasonData.bodyExplanation}</p>
+            </motion.div>
+          )}
 
           {/* Alternative Resources */}
           <motion.div variants={itemVariants} className={styles.section}>

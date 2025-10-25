@@ -48,7 +48,7 @@ import styles from './CellularSciencePage.module.css';
  */
 const CellularSciencePage: React.FC = () => {
   const navigate = useNavigate();
-  const { updateResponse, state } = useAssessment();
+  const { updateResponse, state, disqualify } = useAssessment();
 
   /**
    * Accessibility: Focus management on page load
@@ -168,6 +168,10 @@ const CellularSciencePage: React.FC = () => {
       // Silently fail if localStorage is not available
     }
 
+    if (route === '/disqualified') {
+      disqualify('non-treatable');
+    }
+
     navigate(route);
   };
 
@@ -257,7 +261,7 @@ const CellularSciencePage: React.FC = () => {
         {/* Header */}
         <motion.header className={styles.cellular__header} variants={itemVariants}>
           <h1 className={styles.cellular__title}>
-            Here's What Scientists Discovered
+            Recent studies published in a major scientific journal prove that bodily memories from injuries are stored in RNA inside cells.
           </h1>
         </motion.header>
 
@@ -265,22 +269,13 @@ const CellularSciencePage: React.FC = () => {
         <motion.section
           className={styles.cellular__science}
           variants={itemVariants}
-          aria-labelledby="rna-storage-heading"
         >
-          <h2 id="rna-storage-heading" className={styles.cellular__scienceTitle}>
-            How Pain Gets Stored in RNA
-          </h2>
           <div className={styles.cellular__scienceContent}>
             <p className={styles.cellular__scienceText}>
-              Every time you experience pain, your cells don't just react—they remember.
-              Scientists discovered that pain signals alter RNA patterns in your Primary Cells,
-              creating a molecular memory of injury. This is why pain persists long after
-              tissues heal.
+              But here&apos;s what&apos;s revolutionary: scientists discovered these damaged cellular memories are stored in your &ldquo;Primary Cell&rdquo;—a master template cell that controls every other cell in your body.
             </p>
             <p className={styles.cellular__scienceText}>
-              Traditional treatments target symptoms. We target the source: the corrupted
-              RNA patterns that keep generating pain signals. By repairing these cellular
-              instructions, we can eliminate chronic pain at its origin.
+              While your regular body cells die and regenerate every few months, your Primary Cell remains constant throughout your entire life.
             </p>
           </div>
         </motion.section>
@@ -289,17 +284,13 @@ const CellularSciencePage: React.FC = () => {
         <motion.section
           className={styles.cellular__primary}
           variants={itemVariants}
-          aria-labelledby="primary-cell-heading"
         >
-          <h2 id="primary-cell-heading" className={styles.cellular__primaryTitle}>
-            What Are Primary Cells?
-          </h2>
           <div className={styles.cellular__primaryContent}>
             <p className={styles.cellular__primaryText}>
-              Primary Cells are the first responders to injury in your body. They detect
-              damage, coordinate healing, and store information about past injuries in
-              their RNA. When these cells malfunction, they create chronic pain loops
-              that conventional medicine cannot break.
+              This is why your chronic pain persists even as your body&apos;s tissues regenerate—because the cellular damage in your Primary Cell keeps creating new damaged cells that match the original injury pattern.
+            </p>
+            <p className={styles.cellular__primaryText}>
+              Next, let&apos;s determine if your chronic pain type can be related to Primary Cell damage or something else…
             </p>
           </div>
         </motion.section>
@@ -311,8 +302,11 @@ const CellularSciencePage: React.FC = () => {
           aria-labelledby="conditions-heading"
         >
           <h2 id="conditions-heading" className={styles.cellular__conditionsTitle}>
-            Does This Apply to Your Condition?
+            What chronic pain conditions do you suffer from?
           </h2>
+          <p className={styles.cellular__conditionsIntro}>
+            (Please check all the boxes that apply over the next 2 pages.)
+          </p>
 
           {/* Treatable Conditions Section */}
           <div className={styles.cellular__section}>
@@ -461,10 +455,10 @@ const CellularSciencePage: React.FC = () => {
             variant="primary"
             size="large"
             onClick={handleSubmit}
-            aria-label="Continue to next step"
+            aria-label="Go to the next page of the assessment"
             fullWidth
           >
-            Continue
+            Next Page
           </Button>
         </motion.div>
       </motion.div>

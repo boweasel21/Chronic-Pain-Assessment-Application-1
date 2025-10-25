@@ -1,55 +1,31 @@
-/**
- * Detailed Process Page (Page 10)
- * Comprehensive explanation of 4-step Cellular Repair Process
- */
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@components/common/Button';
-import { ProcessSteps } from './ProcessSteps';
-import { BenefitsGrid } from './BenefitsGrid';
-import { processSteps, benefits } from './data';
 import styles from './index.module.css';
 
-/**
- * Animation variants
- */
 const pageVariants = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
 };
 
-const containerVariants = {
+const itemVariants = {
+  initial: { opacity: 0, y: 24 },
   animate: {
+    opacity: 1,
+    y: 0,
     transition: {
-      staggerChildren: 0.1,
+      duration: 0.5,
+      ease: 'easeOut',
     },
   },
 };
 
-const itemVariants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-};
-
-/**
- * Detailed Process Page Component
- *
- * @description Comprehensive page explaining the 4-step Cellular Repair Process
- * with expandable sections, benefits, and call-to-action. Now refactored into
- * smaller, maintainable components.
- *
- * @returns {JSX.Element} Rendered detailed process page
- */
 const DetailedProcess: React.FC = () => {
   const navigate = useNavigate();
 
-  /**
-   * Handles navigation to proof/offer page
-   */
-  const handleGetStarted = () => {
+  const handleNext = (): void => {
     navigate('/proof-offer-1');
   };
 
@@ -65,56 +41,50 @@ const DetailedProcess: React.FC = () => {
       <div className={styles.container}>
         <motion.div
           className={styles.content}
-          variants={containerVariants}
+          variants={itemVariants}
           initial="initial"
           animate="animate"
         >
-          {/* Main Headline */}
-          <motion.div variants={itemVariants}>
-            <h1 className={styles.headline}>Your 4-Step Cellular Repair Process</h1>
-            <p className={styles.subtitle}>
-              This isn't guesswork. This is systematic cellular repair based on proven science.
-            </p>
-          </motion.div>
+          <h1 className={styles.headline}>
+            We don't manage your pain—we eliminate it by repairing the cellular source.
+          </h1>
 
-          {/* Process Steps */}
-          <ProcessSteps steps={processSteps} />
-
-          {/* Benefits Section */}
-          <motion.div variants={itemVariants}>
-            <BenefitsGrid benefits={benefits} />
-          </motion.div>
-
-          {/* Final Message */}
-          <motion.div variants={itemVariants} className={styles.finalMessage}>
-            <h2 className={styles.finalMessageTitle}>
-              This Is How We Get Results When Nothing Else Works
-            </h2>
-            <p className={styles.finalMessageText}>
-              Standard medicine treats symptoms. Surgery removes structures. Medications mask
-              signals.
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>How We Do It:</h2>
+            <p className={styles.paragraph}>
+              We've identified 9 different types of cellular damage that cause chronic pain. Each requires a specific repair technique. Using your pain signals as a roadmap, we:
             </p>
-            <p className={styles.finalMessageText}>
-              <strong>We repair the cellular damage causing your pain.</strong>
+            <ol className={styles.list}>
+              <li>Pinpoint the exact cellular damage causing your specific pain symptoms</li>
+              <li>Identify which of the 9 damage types are affecting you</li>
+              <li>Apply the corresponding repair technique over Zoom to fix the damaged genetic material</li>
+              <li>Verify the repair by monitoring your pain signals in real-time over Zoom</li>
+            </ol>
+            <p className={styles.paragraph}>
+              Our techniques work at the cellular level to repair stuck mRNA and damaged histone coatings.
             </p>
-            <p className={styles.finalMessageText}>
-              That's why our patients see results after years—sometimes decades—of failed
-              treatments.
+            <p className={styles.paragraph}>
+              The process feels calm and relaxing—similar to guided meditation—but you're actually performing biological repair work.
             </p>
-          </motion.div>
+            <p className={styles.paragraph}>
+              <strong>(Important)</strong> The cellular repair approach is brand new to most people, but the science is solid and peer-reviewed.
+            </p>
+            <p className={styles.paragraph}>
+              We're not doing experimental work—we're applying established research about cellular memory storage to solve chronic pain.
+            </p>
+          </section>
 
-          {/* Call to Action */}
-          <motion.div variants={itemVariants} className={styles.cta}>
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>Want Proof?</h2>
             <Button
               variant="primary"
               size="large"
-              onClick={handleGetStarted}
-              aria-label="Start your cellular repair journey"
-              fullWidth
+              onClick={handleNext}
+              aria-label="Go to the first proof offer page"
             >
-              I Want to Get Started
+              Next Page
             </Button>
-          </motion.div>
+          </section>
         </motion.div>
       </div>
     </motion.div>
