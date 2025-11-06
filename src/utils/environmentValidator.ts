@@ -138,7 +138,7 @@ export const validateEnvironment = (): void => {
   REQUIRED_VARIABLES.forEach((key) => {
     const value = env[key];
 
-    if (!hasValue(value)) {
+    if (!hasValue(value, key)) {
       missing.push(key);
       return;
     }
@@ -146,10 +146,11 @@ export const validateEnvironment = (): void => {
     // Validate specific formats
     switch (key) {
       case 'VITE_API_BASE_URL':
-        if (!isValidUrl(value)) {
+        // Allow empty string for same-origin requests
+        if (value !== '' && !isValidUrl(value)) {
           invalid.push({
             name: key,
-            reason: `Invalid URL format: "${value}". Must be a valid HTTP(S) URL.`,
+            reason: `Invalid URL format: "${value}". Must be a valid HTTP(S) URL or empty for same-origin.`,
           });
         }
         break;
