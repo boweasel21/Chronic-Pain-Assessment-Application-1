@@ -52,8 +52,13 @@ const RECOMMENDED_VARIABLES = [
 
 /**
  * Check if environment variable exists and is not empty
+ * Special case: VITE_API_BASE_URL can be empty for same-origin requests
  */
-const hasValue = (value: string | undefined): boolean => {
+const hasValue = (value: string | undefined, key?: string): boolean => {
+  // Allow empty string for API_BASE_URL (means same-origin)
+  if (key === 'VITE_API_BASE_URL' && value === '') {
+    return true;
+  }
   return value !== undefined && value !== '' && value !== 'undefined' && value !== 'null';
 };
 
