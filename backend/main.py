@@ -149,6 +149,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 # Include all route modules
 app.include_router(health.router, tags=["Health"])
+app.include_router(csrf.router, prefix="/api", tags=["CSRF"])
 app.include_router(assessment.router, prefix="/api/assessment", tags=["Assessment"])
 app.include_router(email.router, prefix="/api/email", tags=["Email"])
 
