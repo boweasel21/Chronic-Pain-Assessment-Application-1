@@ -1,141 +1,145 @@
 /**
  * Condition data definitions for Primary Cell Assessment
- * Categorizes conditions into treatable and non-treatable
+ * Categorizes conditions into treatable and non-treatable groupings
  */
 
 export interface Condition {
   id: string;
   name: string;
   category: 'treatable' | 'non-treatable';
+  /**
+   * Optional grouping label used for UI sections (e.g. "Injury-Related Pain")
+   */
+  group?: string;
 }
 
 export const CONDITIONS: readonly Condition[] = [
-  // Treatable conditions (15)
+  // Treatable conditions sourced from WellnessInWeeks.com
   {
-    id: 'fibromyalgia',
-    name: 'Fibromyalgia',
+    id: 'physical-injury',
+    name: 'Physical Injury (sports or everyday injuries that persist)',
     category: 'treatable',
+    group: 'Injury-Related Pain',
   },
+  {
+    id: 'post-traumatic-pain',
+    name: 'Post-Traumatic Pain (continues after an injury)',
+    category: 'treatable',
+    group: 'Injury-Related Pain',
+  },
+  {
+    id: 'whiplash',
+    name: 'Whiplash from sudden neck movement',
+    category: 'treatable',
+    group: 'Injury-Related Pain',
+  },
+  {
+    id: 'tendon-ligament-pain',
+    name: 'Tendon & Ligament Pain lasting 12+ months',
+    category: 'treatable',
+    group: 'Injury-Related Pain',
+  },
+  {
+    id: 'chronic-back-neck',
+    name: 'Chronic Back or Neck Pain (muscle strain, tightness, stiffness)',
+    category: 'treatable',
+    group: 'Chronic Pain Conditions',
+  },
+  {
+    id: 'osteoarthritis',
+    name: 'Osteoarthritis Pain affecting joints, neck, or back',
+    category: 'treatable',
+    group: 'Chronic Pain Conditions',
+  },
+  {
+    id: 'degenerative-bone',
+    name: 'Degenerative Bone-on-Bone Pain from cartilage breakdown',
+    category: 'treatable',
+    group: 'Chronic Pain Conditions',
+  },
+  {
+    id: 'herniated-disc',
+    name: 'Herniated Disc pain',
+    category: 'treatable',
+    group: 'Chronic Pain Conditions',
+  },
+  {
+    id: 'bulging-disc',
+    name: 'Bulging Disc pain',
+    category: 'treatable',
+    group: 'Chronic Pain Conditions',
+  },
+  {
+    id: 'spinal-stenosis',
+    name: 'Spinal Stenosis & Spondylosis pain',
+    category: 'treatable',
+    group: 'Chronic Pain Conditions',
+  },
+  {
+    id: 'phantom-limb',
+    name: 'Phantom Limb Pain',
+    category: 'treatable',
+    group: 'Neuropathic Pain',
+  },
+  {
+    id: 'sciatica',
+    name: 'Sciatica (constant pain radiating along the sciatic nerve)',
+    category: 'treatable',
+    group: 'Neuropathic Pain',
+  },
+  {
+    id: 'sacroiliac-dysfunction',
+    name: 'Sacroiliac Joint Dysfunction (constant SI joint pain)',
+    category: 'treatable',
+    group: 'Neuropathic Pain',
+  },
+  {
+    id: 'spontaneous-pain',
+    name: 'Pain Appearing Out of the Blue (persistent without clear cause)',
+    category: 'treatable',
+    group: 'Unknown Origin of Pain',
+  },
+  {
+    id: 'pelvic-pain',
+    name: 'Pelvic Pain (chronic)',
+    category: 'treatable',
+    group: 'Pelvic Pain',
+  },
+
+  // Non-treatable conditions currently outside program scope
   {
     id: 'chronic-fatigue',
     name: 'Chronic Fatigue Syndrome (ME/CFS)',
-    category: 'treatable',
-  },
-  {
-    id: 'neuropathy',
-    name: 'Peripheral Neuropathy',
-    category: 'treatable',
-  },
-  {
-    id: 'complex-regional',
-    name: 'Complex Regional Pain Syndrome (CRPS)',
-    category: 'treatable',
-  },
-  {
-    id: 'migraine',
-    name: 'Chronic Migraines',
-    category: 'treatable',
-  },
-  {
-    id: 'back-pain',
-    name: 'Chronic Back Pain',
-    category: 'treatable',
-  },
-  {
-    id: 'arthritis',
-    name: 'Rheumatoid Arthritis',
-    category: 'treatable',
-  },
-  {
-    id: 'lupus',
-    name: 'Lupus',
-    category: 'treatable',
-  },
-  {
-    id: 'lyme',
-    name: 'Chronic Lyme Disease',
-    category: 'treatable',
-  },
-  {
-    id: 'neck-pain',
-    name: 'Chronic Neck Pain',
-    category: 'treatable',
-  },
-  {
-    id: 'joint-pain',
-    name: 'Chronic Joint Pain',
-    category: 'treatable',
-  },
-  {
-    id: 'muscle-pain',
-    name: 'Chronic Muscle Pain (Myalgia)',
-    category: 'treatable',
-  },
-  {
-    id: 'tension-headaches',
-    name: 'Chronic Tension Headaches',
-    category: 'treatable',
-  },
-  {
-    id: 'autoimmune',
-    name: 'Autoimmune-Related Pain',
-    category: 'treatable',
-  },
-  {
-    id: 'ehlers-danlos',
-    name: 'Ehlers-Danlos Syndrome (EDS)',
-    category: 'treatable',
-  },
-
-  // Non-treatable conditions (10)
-  {
-    id: 'cancer-pain',
-    name: 'Cancer-Related Pain',
     category: 'non-treatable',
   },
   {
-    id: 'post-surgical',
-    name: 'Post-Surgical Pain (Acute)',
+    id: 'autoimmune-disease',
+    name: 'Autoimmune Disease (e.g., rheumatoid arthritis, lupus, MS)',
     category: 'non-treatable',
   },
   {
-    id: 'active-injury',
-    name: 'Active Injury or Trauma',
+    id: 'fibromyalgia',
+    name: 'Fibromyalgia',
     category: 'non-treatable',
   },
   {
-    id: 'severe-psychiatric',
-    name: 'Severe Psychiatric Disorder',
+    id: 'infectious-disease',
+    name: 'Infectious Diseases (e.g., HIV/AIDS, Hepatitis C)',
     category: 'non-treatable',
   },
   {
-    id: 'kidney-disease',
-    name: 'Advanced Kidney Disease',
+    id: 'traumatic-brain-injury',
+    name: 'Traumatic Brain Injury (TBI)',
     category: 'non-treatable',
   },
   {
-    id: 'liver-disease',
-    name: 'Advanced Liver Disease',
+    id: 'endocrine-disorder',
+    name: 'Endocrine Disorders (e.g., hypothyroidism, Cushing’s)',
     category: 'non-treatable',
   },
   {
-    id: 'heart-failure',
-    name: 'Congestive Heart Failure',
-    category: 'non-treatable',
-  },
-  {
-    id: 'unstable-cardiac',
-    name: 'Unstable Cardiac Condition',
-    category: 'non-treatable',
-  },
-  {
-    id: 'severe-copd',
-    name: 'Severe COPD',
-    category: 'non-treatable',
-  },
-  {
-    id: 'dementia',
-    name: 'Dementia or Severe Cognitive Impairment',
+    id: 'gastrointestinal-disorder',
+    name: 'Gastrointestinal Disorders (e.g., IBS, IBD)',
     category: 'non-treatable',
   },
 ] as const;

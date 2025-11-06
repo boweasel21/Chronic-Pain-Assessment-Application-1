@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAssessment } from '@context/AssessmentContext';
 import { Button } from '@components/common/Button';
+import { sanitizeEmail, sanitizeName, sanitizePhone } from '@utils/sanitizer';
 import styles from './index.module.css';
 
 const pageVariants = {
@@ -40,14 +41,16 @@ const LeadCapture: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
-    if (!name.trim() || !email.trim() || !phone.trim()) {
-      // Proposed copy: validation message when fields are missing
-      setError('Please complete all fields so we can send your video.');
+    const sanitizedName = sanitizeName(name.trim());
+    const sanitizedEmail = sanitizeEmail(email.trim());
+    const sanitizedPhone = sanitizePhone(phone.trim());
+
+    if (!sanitizedName || !sanitizedEmail || !sanitizedPhone) {
+      setError('Please complete every field so we can send your video.');
       return;
     }
 
-    if (!validateEmail(email)) {
-      // Proposed copy: email validation message
+    if (!validateEmail(sanitizedEmail)) {
       setError('Please enter a valid email address.');
       return;
     }
@@ -55,9 +58,9 @@ const LeadCapture: React.FC = () => {
     setError(null);
 
     updateResponse({
-      leadCaptureName: name.trim(),
-      leadCaptureEmail: email.trim(),
-      leadCapturePhone: phone.trim(),
+      leadCaptureName: sanitizedName,
+      leadCaptureEmail: sanitizedEmail,
+      leadCapturePhone: sanitizedPhone,
     });
 
     navigate('/final-video');
@@ -75,7 +78,7 @@ const LeadCapture: React.FC = () => {
       <div className={styles.container}>
         <motion.div className={styles.card} variants={itemVariants} initial="initial" animate="animate">
           <h1 className={styles.headline}>
-            To see a live recorded highlights video of how we work with clients A-Z and see a live demonstration of a client doing our process and eliminating a chronic pain symptom, fill out the form below, and we’ll email you a link to that video.
+            You&apos;re almost there. Fill out the form below and we&apos;ll email you a live, recorded highlights video that walks through our process A–Z—plus a real-time demonstration of a client eliminating a chronic pain symptom.
           </h1>
 
           <form className={styles.form} onSubmit={handleSubmit} noValidate>
@@ -115,8 +118,12 @@ const LeadCapture: React.FC = () => {
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
               autoComplete="tel"
+              aria-describedby="lead-phone-help"
               required
             />
+            <p id="lead-phone-help" className={styles.helper}>
+              We&apos;ll text you if you have questions after the video and alert you when we send anything important.
+            </p>
 
             {error && (
               <p className={styles.error} role="alert">
@@ -128,17 +135,19 @@ const LeadCapture: React.FC = () => {
               variant="primary"
               size="large"
               type="submit"
-              aria-label="Submit your details to receive the video"
+              aria-label="Submit your details to receive the highlights video"
               fullWidth
             >
-              Next Page
+              Email Me the Highlights Video
             </Button>
           </form>
 
           <p className={styles.paragraph}>
-            Once you see with your own eyes how it all works, you’ll find that most of your current questions will be answered. And you’ll know if we’re the right solution for you or not.
+            Once you watch it, most of your questions will already be answered—and you’ll know if we’re the right solution for you.
           </p>
-          <p className={styles.paragraph}>We look forward to you seeing everything.</p>
+          <p className={styles.paragraph}>
+            You&apos;ll also receive a link to watch again later, plus an invitation to book a discovery call if you&apos;re ready.
+          </p>
         </motion.div>
       </div>
     </motion.div>

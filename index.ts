@@ -24,7 +24,12 @@ export type * from './types';
 // Re-export for convenience
 export { CONDITIONS, getTreatableConditions, getNonTreatableConditions } from './data/conditions';
 export { SENSATIONS, getSensationsByIds } from './data/sensations';
-export { TREATMENTS, getTreatmentsByCategory, groupTreatmentsByCategory } from './data/treatments';
+export {
+  TREATMENTS,
+  getTreatmentsByCategory,
+  getSubTreatments,
+  groupTreatmentsByCategory,
+} from './data/treatments';
 
 export {
   PAGES,

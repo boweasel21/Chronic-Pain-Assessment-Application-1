@@ -42,6 +42,19 @@ export const createInitialResponse = (): AssessmentResponse => ({
   educationalInterests: [],
   contactPreferences: [],
 
+  // New Pages 4-7 Fields
+  treatmentHistory: [],
+  otherTreatments: null,
+  urgencyLevel: null,
+  urgencySelection: null,
+  currentBudget: null,
+  budgetLevel: null,
+  affordabilityResponse: null,
+  affordabilityConfirmed: null,
+  futureSpendOutlook: null,
+  suicidalRiskAnswer: null,
+  additionalInfo: null,
+
   // Metadata
   startedAt: new Date().toISOString(),
   completedAt: null,

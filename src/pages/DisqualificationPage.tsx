@@ -7,6 +7,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAssessmentResponse } from '@context/AssessmentContext';
+import { getConditionById } from '@data/conditions';
 import { Button } from '@components/common/Button';
 import { type AssessmentResponse } from '@types';
 import styles from './DisqualificationPage.module.css';
@@ -45,19 +46,75 @@ const disqualificationReasons: Record<string, DisqualificationReason> = {
     bodyExplanation:
       'Your body is still developing, and the cellular repair processes work differently in growing tissues. You need specialized pediatric chronic pain care.',
   },
-  'rheumatoid-arthritis': {
-    condition: 'Rheumatoid Arthritis',
+  'autoimmune-disease': {
+    condition: 'Autoimmune Disease',
     explanation:
-      'Rheumatoid Arthritis is an autoimmune condition that requires specialized immunological treatment. Our Cellular Repair Method focuses on pain from mechanical damage, not autoimmune processes.',
+      'Autoimmune-driven pain requires immunological treatment. Our Cellular Repair Method focuses on mechanical cellular damage, not immune dysregulation.',
     bodyExplanation:
-      'Your immune system is attacking your joint tissues. This requires medications that modulate immune response, not cellular repair protocols.',
+      'Your immune system is attacking tissues throughout your body. This requires medical protocols that calm the immune response before cellular repair work can be effective.',
+  },
+  'chronic-fatigue': {
+    condition: 'Chronic Fatigue Syndrome (ME/CFS)',
+    explanation:
+      'Our research team is actively studying ME/CFS. At this time, we do not have a Primary Cell protocol that delivers consistent outcomes for this condition.',
+    bodyExplanation:
+      'ME/CFS involves complex immune and metabolic factors that behave differently from mechanical injury patterns. We recommend continuing with specialists focused on ME/CFS research.',
+  },
+  fibromyalgia: {
+    condition: 'Fibromyalgia',
+    explanation:
+      'Fibromyalgia involves widespread neurological sensitization that we are still researching. We do not currently have a reproducible Primary Cell repair process for this condition.',
+    bodyExplanation:
+      'Your nervous system is amplifying pain signals globally. Until our research confirms reliable outcomes, we do not want to offer a process that might not relieve your symptoms.',
+  },
+  'infectious-disease': {
+    condition: 'Infectious Disease-Related Pain',
+    explanation:
+      'Pain linked to active or chronic infections must be stabilized by medical providers who specialize in infectious disease before cellular repair work can begin.',
+    bodyExplanation:
+      'Your pain is connected to ongoing pathogen activity. Until those pathogens are addressed, cellular repair work will not hold.',
+  },
+  'traumatic-brain-injury': {
+    condition: 'Traumatic Brain Injury (TBI)',
+    explanation:
+      'We are conducting studies on post-TBI pain patterns. At this time, we do not yet have a Primary Cell repair process for TBI-related pain.',
+    bodyExplanation:
+      'Brain injuries create complex neurological changes that extend beyond the cellular injury patterns we currently repair.',
+  },
+  'endocrine-disorder': {
+    condition: 'Endocrine Disorders',
+    explanation:
+      'Hormone-driven pain requires endocrinology support. Once hormone levels are balanced, we can evaluate whether residual pain is cellular.',
+    bodyExplanation:
+      'Your endocrine system is creating pain through hormonal imbalance. This must be stabilized through medical treatment before we can assess cellular contributions.',
+  },
+  'gastrointestinal-disorder': {
+    condition: 'Gastrointestinal Disorders',
+    explanation:
+      'Visceral pain connected to GI disorders involves organ and immune interactions outside our current scope. Specialized GI care is required first.',
+    bodyExplanation:
+      'The pain you are feeling is linked to digestive tract inflammation and immune response. Those systems must be regulated before cellular repair can help.',
   },
   'cancer-pain': {
     condition: 'Cancer-Related Pain',
     explanation:
-      'Cancer and cancer-related pain require ongoing oncological care. Our protocols are not designed to work alongside active cancer treatment.',
+      'Cancer and cancer-related pain require oncological oversight. Our protocols are not designed to work alongside active cancer treatment.',
     bodyExplanation:
       'Your pain is related to active disease processes that need oncological management first and foremost.',
+  },
+  'rheumatoid-arthritis': {
+    condition: 'Autoimmune Arthritis',
+    explanation:
+      'Autoimmune-driven joint pain requires immunology support. Once the immune response is stabilized, we can reassess whether cellular repair is appropriate.',
+    bodyExplanation:
+      'Your immune system is attacking joint tissues. This needs to be addressed with disease-modifying therapies before cellular repair can be effective.',
+  },
+  'suicidal-risk': {
+    condition: 'Your Safety Comes First',
+    explanation:
+      'If you are experiencing suicidal thoughts, plans, or previous attempts, we want you to get immediate, specialized support. Our process is not designed to address active mental health crises.',
+    bodyExplanation:
+      'Chronic pain can feel overwhelming. You deserve rapid access to professionals who can help you stay safe while we continue advancing cellular repair options.',
   },
   'non-treatable': {
     condition: 'Non-Treatable Condition',
@@ -103,7 +160,7 @@ const getAlternativeResources = (reason: string): Resource[] => {
   ];
 
   const specificResources: Record<string, Resource[]> = {
-    'rheumatoid-arthritis': [
+    'autoimmune-disease': [
       {
         title: 'Arthritis Foundation',
         description: 'Resources for autoimmune arthritis management',
@@ -113,6 +170,78 @@ const getAlternativeResources = (reason: string): Resource[] => {
         title: 'Rheumatoid Arthritis Support Network',
         description: 'Community support and treatment information',
         url: 'https://www.rheumatoidarthritis.org',
+      },
+    ],
+    fibromyalgia: [
+      {
+        title: 'National Fibromyalgia Association',
+        description: 'Education, research updates, and support resources',
+        url: 'https://www.fmaware.org',
+      },
+      {
+        title: 'Fibromyalgia Support Groups',
+        description: 'Peer support communities for managing fibromyalgia',
+        url: 'https://www.mayoclinic.org/diseases-conditions/fibromyalgia/in-depth/fibromyalgia-support-groups/art-20335051',
+      },
+    ],
+    'chronic-fatigue': [
+      {
+        title: 'Solve ME/CFS Initiative',
+        description: 'Research-backed resources and patient advocacy for ME/CFS',
+        url: 'https://solvecfs.org',
+      },
+      {
+        title: 'ME Association',
+        description: 'Support services and research updates for ME/CFS',
+        url: 'https://meassociation.org.uk',
+      },
+    ],
+    'infectious-disease': [
+      {
+        title: 'Centers for Disease Control and Prevention',
+        description: 'Guidelines and care recommendations for infectious diseases',
+        url: 'https://www.cdc.gov',
+      },
+      {
+        title: 'Infectious Diseases Society of America',
+        description: 'Find specialists and up-to-date treatment protocols',
+        url: 'https://www.idsociety.org',
+      },
+    ],
+    'traumatic-brain-injury': [
+      {
+        title: 'Brain Injury Association of America',
+        description: 'Support resources and specialists for TBI recovery',
+        url: 'https://www.biausa.org',
+      },
+      {
+        title: 'Model Systems Knowledge Translation Center',
+        description: 'Evidence-based fact sheets for TBI care',
+        url: 'https://msktc.org/tbi',
+      },
+    ],
+    'endocrine-disorder': [
+      {
+        title: 'Hormone Health Network',
+        description: 'Educational resources on endocrine disorders and treatments',
+        url: 'https://www.hormone.org',
+      },
+      {
+        title: 'Endocrine Society Patient Resources',
+        description: 'Find endocrinologists and patient guides',
+        url: 'https://www.endocrine.org/patient-engagement',
+      },
+    ],
+    'gastrointestinal-disorder': [
+      {
+        title: 'Crohn’s & Colitis Foundation',
+        description: 'Support and medical guidance for inflammatory bowel diseases',
+        url: 'https://www.crohnscolitisfoundation.org',
+      },
+      {
+        title: 'International Foundation for Gastrointestinal Disorders',
+        description: 'Resources for IBS and other functional GI disorders',
+        url: 'https://www.iffgd.org',
       },
     ],
     'cancer-pain': [
@@ -125,6 +254,30 @@ const getAlternativeResources = (reason: string): Resource[] => {
         title: 'Cancer Support Community',
         description: 'Support services for cancer patients and families',
         url: 'https://www.cancersupportcommunity.org',
+      },
+    ],
+    'rheumatoid-arthritis': [
+      {
+        title: 'Arthritis Foundation',
+        description: 'Resources for autoimmune arthritis management',
+        url: 'https://www.arthritis.org',
+      },
+      {
+        title: 'Rheumatoid Arthritis Support Network',
+        description: 'Community support and treatment information',
+        url: 'https://www.rheumatoidarthritis.org',
+      },
+    ],
+    'suicidal-risk': [
+      {
+        title: '988 Suicide & Crisis Lifeline',
+        description: 'Call or text 988 (US) to reach trained counselors 24/7',
+        url: 'https://988lifeline.org',
+      },
+      {
+        title: 'Crisis Text Line',
+        description: 'Text HOME to 741741 (US/Canada) or access global resources',
+        url: 'https://www.crisistextline.org',
       },
     ],
     'age-under-18': [
@@ -345,8 +498,22 @@ function getDisqualificationReasonKey(response: AssessmentResponse): string {
     return 'age-under-18';
   }
 
-  if (response.conditionType === 'rheumatoid-arthritis') {
-    return 'rheumatoid-arthritis';
+  if (response.suicidalRiskAnswer === 'yes') {
+    return 'suicidal-risk';
+  }
+
+  if (response.conditionType === 'rheumatoid-arthritis' || response.conditionType === 'cancer-pain') {
+    return response.conditionType;
+  }
+
+  if (response.conditionType) {
+    const condition = getConditionById(response.conditionType);
+    if (condition?.category === 'non-treatable') {
+      if (disqualificationReasons[response.conditionType]) {
+        return response.conditionType;
+      }
+      return 'non-treatable';
+    }
   }
 
   // Default fallback

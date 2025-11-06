@@ -58,7 +58,13 @@ const ProcessExplanation: React.FC = () => {
           initial="initial"
           animate="animate"
         >
-          <motion.section className={styles.section} variants={itemVariants}>
+          <motion.section
+            className={`${styles.section} ${styles.sectionCard}`}
+            variants={itemVariants}
+          >
+            <h2 className={styles.sectionTitle}>
+              We don’t manage your pain—we eliminate it by repairing the cellular source.
+            </h2>
             <p className={styles.paragraph}>
               Our process targets and repairs the specific damaged genetic material inside your Primary Cell using gentle, non-invasive techniques.
             </p>

@@ -74,19 +74,19 @@
 .cellular__science {
   /* Layout */
   margin-bottom: 40px;
-  padding: 32px 24px;
+  padding: 32px 28px; /* slightly more padding for headline card */
 
   /* Visual */
-  background-color: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(226, 211, 163, 0.3);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(135deg, rgba(130, 95, 30, 0.15) 0%, rgba(226, 211, 163, 0.35) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(130, 95, 30, 0.25);
+  box-shadow: 0 14px 34px -18px rgba(29, 44, 73, 0.55);
 }
 
 .cellular__scienceTitle {
   /* Typography */
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
-  font-weight: 600;
+  font-size: clamp(1.35rem, 3.2vw, 1.9rem);
+  font-weight: 700;
   line-height: 1.3;
 
   /* Spacing */
@@ -113,7 +113,12 @@
   margin: 0;
 
   /* Color */
-  color: rgba(29, 44, 73, 0.85);
+  color: rgba(29, 44, 73, 0.92);
+}
+
+.cellular__scienceText strong {
+  font-weight: 700;
+  color: rgba(29, 44, 73, 1);
 }
 
 /**
@@ -275,6 +280,26 @@
   overflow: hidden;
 }
 
+.cellular__groupContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 24px 8px;
+}
+
+.cellular__group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cellular__groupTitle {
+  margin: 0;
+  font-size: clamp(1.05rem, 2.6vw, 1.2rem);
+  font-weight: 600;
+  color: rgba(29, 44, 73, 0.9);
+}
+
 /**
  * Checkbox Grid
  */
@@ -283,10 +308,6 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
-  padding: 24px;
-
-  /* Visual */
-  border-top: 1px solid rgba(226, 211, 163, 0.3);
 }
 
 /**

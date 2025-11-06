@@ -9,7 +9,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAssessment } from '@context/AssessmentContext';
 import { Button } from '@components/common/Button';
 import { Checkbox } from '@components/common/Checkbox';
-import { TREATMENTS, getTreatmentsByCategory } from '@data/treatments';
+import {
+  getTreatmentById,
+  getTreatmentsByCategory,
+  getSubTreatments,
+} from '@data/treatments';
 import styles from './TreatmentHistory.module.css';
 
 /**
@@ -66,10 +70,11 @@ const CATEGORIES: readonly CategoryConfig[] = [
  */
 const TreatmentHistory = (): JSX.Element => {
   const navigate = useNavigate();
-  const { state, updateResponse } = useAssessment();
+  const { updateResponse } = useAssessment();
 
   const [selectedTreatments, setSelectedTreatments] = useState<string[]>([]);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const [expandedTreatments, setExpandedTreatments] = useState<string[]>([]);
   const [otherTreatments, setOtherTreatments] = useState('');
 
   /**
@@ -80,8 +85,31 @@ const TreatmentHistory = (): JSX.Element => {
     if (saved) {
       try {
         const data = JSON.parse(saved);
-        setSelectedTreatments(data.selectedTreatments || []);
+        const loadedSelections: string[] = data.selectedTreatments || [];
+        setSelectedTreatments(loadedSelections);
         setOtherTreatments(data.otherTreatments || '');
+
+        // Expand categories that already have selections so users can review them quickly
+        const categoriesToExpand = new Set<string>();
+        const parentTreatmentsToExpand = new Set<string>();
+
+        loadedSelections.forEach((id) => {
+          const treatment = getTreatmentById(id);
+          if (treatment) {
+            categoriesToExpand.add(treatment.category);
+            if (treatment.parentId) {
+              parentTreatmentsToExpand.add(treatment.parentId);
+            }
+          }
+        });
+
+        if (categoriesToExpand.size > 0) {
+          setExpandedCategories(Array.from(categoriesToExpand));
+        }
+
+        if (parentTreatmentsToExpand.size > 0) {
+          setExpandedTreatments(Array.from(parentTreatmentsToExpand));
+        }
       } catch (error) {
         // Silent fail - invalid JSON
       }
@@ -120,6 +148,17 @@ const TreatmentHistory = (): JSX.Element => {
       prev.includes(categoryId)
         ? prev.filter((id) => id !== categoryId)
         : [...prev, categoryId]
+    );
+  }, []);
+
+  /**
+   * Toggle expansion for sub-treatment lists
+   */
+  const toggleTreatmentExpansion = useCallback((treatmentId: string): void => {
+    setExpandedTreatments((prev) =>
+      prev.includes(treatmentId)
+        ? prev.filter((id) => id !== treatmentId)
+        : [...prev, treatmentId]
     );
   }, []);
 
@@ -184,6 +223,7 @@ const TreatmentHistory = (): JSX.Element => {
             const isExpanded = expandedCategories.includes(category.id);
             const categoryTreatments = getTreatmentsByCategory(category.category);
             const selectedCount = getCategoryCount(category.id);
+            const topLevelTreatments = categoryTreatments.filter((t) => !t.parentId);
 
             return (
               <motion.div
@@ -231,16 +271,71 @@ const TreatmentHistory = (): JSX.Element => {
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                     >
                       <div className={styles.treatmentGrid}>
-                        {categoryTreatments.map((treatment) => (
-                          <Checkbox
-                            key={treatment.id}
-                            id={`treatment-${treatment.id}`}
-                            label={treatment.name}
-                            checked={selectedTreatments.includes(treatment.id)}
-                            onChange={() => toggleTreatment(treatment.id)}
-                            aria-label={`Select ${treatment.name}`}
-                          />
-                        ))}
+                        {topLevelTreatments.map((treatment) => {
+                          const childTreatments = getSubTreatments(treatment.id);
+                          const hasChildren = childTreatments.length > 0;
+                          const isTreatmentExpanded = expandedTreatments.includes(treatment.id);
+
+                          return (
+                            <div key={treatment.id} className={styles.treatmentItem}>
+                              <div className={styles.treatmentHeader}>
+                                <Checkbox
+                                  id={`treatment-${treatment.id}`}
+                                  label={treatment.name}
+                                  checked={selectedTreatments.includes(treatment.id)}
+                                  onChange={() => toggleTreatment(treatment.id)}
+                                  aria-label={`Select ${treatment.name}`}
+                                />
+                                {hasChildren && (
+                                  <button
+                                    type="button"
+                                    className={styles.subTreatmentToggle}
+                                    onClick={() => toggleTreatmentExpansion(treatment.id)}
+                                    aria-expanded={isTreatmentExpanded}
+                                    aria-controls={`sub-treatments-${treatment.id}`}
+                                  >
+                                    <span>{isTreatmentExpanded ? 'Hide specifics' : 'Show specifics'}</span>
+                                    <motion.span
+                                      className={styles.subTreatmentIcon}
+                                      animate={{ rotate: isTreatmentExpanded ? 180 : 0 }}
+                                      transition={{ duration: 0.25 }}
+                                      aria-hidden="true"
+                                    >
+                                      ▼
+                                    </motion.span>
+                                  </button>
+                                )}
+                              </div>
+
+                              {hasChildren && (
+                                <AnimatePresence initial={false}>
+                                  {isTreatmentExpanded && (
+                                    <motion.div
+                                      id={`sub-treatments-${treatment.id}`}
+                                      className={styles.subTreatmentList}
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: 'auto', opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                    >
+                                      {childTreatments.map((child) => (
+                                        <Checkbox
+                                          key={child.id}
+                                          id={`treatment-${child.id}`}
+                                          label={child.name}
+                                          checked={selectedTreatments.includes(child.id)}
+                                          onChange={() => toggleTreatment(child.id)}
+                                          aria-label={`Select ${child.name}`}
+                                          className={styles.subTreatmentCheckbox}
+                                        />
+                                      ))}
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     </motion.div>
                   )}

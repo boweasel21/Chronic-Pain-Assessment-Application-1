@@ -53,8 +53,6 @@ export const createMockAssessmentResponse = (
     supportSystems: [],
     educationalInterests: [],
     contactPreferences: [],
-
-    // New Pages 4-7 Fields
     treatmentHistory: [],
     otherTreatments: null,
     urgencyLevel: null,
@@ -63,6 +61,8 @@ export const createMockAssessmentResponse = (
     budgetLevel: null,
     affordabilityResponse: null,
     affordabilityConfirmed: false,
+    futureSpendOutlook: null,
+    suicidalRiskAnswer: null,
     additionalInfo: null,
 
     // Proof Offer Pages 11-12 Fields

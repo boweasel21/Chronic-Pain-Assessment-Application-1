@@ -68,12 +68,12 @@ describe('State Management Integration Tests', () => {
 
       act(() => {
         result.current.updateResponse({
-          conditionType: 'arthritis',
+          conditionType: 'osteoarthritis',
           painLevel: 7,
         });
       });
 
-      expect(result.current.state.response.conditionType).toBe('arthritis');
+      expect(result.current.state.response.conditionType).toBe('osteoarthritis');
       expect(result.current.state.response.painLevel).toBe(7);
     });
 
@@ -85,14 +85,14 @@ describe('State Management Integration Tests', () => {
       const { result } = renderHook(() => useAssessment(), { wrapper });
 
       act(() => {
-        result.current.updateResponse({ conditionType: 'arthritis' });
+        result.current.updateResponse({ conditionType: 'osteoarthritis' });
       });
 
       act(() => {
         result.current.updateResponse({ painLevel: 7 });
       });
 
-      expect(result.current.state.response.conditionType).toBe('arthritis');
+      expect(result.current.state.response.conditionType).toBe('osteoarthritis');
       expect(result.current.state.response.painLevel).toBe(7);
     });
 
@@ -265,13 +265,13 @@ describe('State Management Integration Tests', () => {
       // Make some changes
       act(() => {
         result.current.updateResponse({
-          conditionType: 'arthritis',
+          conditionType: 'osteoarthritis',
           painLevel: 7,
         });
         result.current.nextPage();
       });
 
-      expect(result.current.state.response.conditionType).toBe('arthritis');
+      expect(result.current.state.response.conditionType).toBe('osteoarthritis');
       expect(result.current.state.response.currentPage).toBe(2);
 
       // Reset
@@ -294,7 +294,7 @@ describe('State Management Integration Tests', () => {
 
       // Select a condition
       const conditionCheckbox = await screen.findByRole('checkbox', {
-        name: /arthritis|back pain/i,
+        name: /osteoarthritis|chronic back/i,
       });
       await user.click(conditionCheckbox);
 
@@ -319,7 +319,7 @@ describe('State Management Integration Tests', () => {
         // Condition should still be selected
         await waitFor(() => {
           const checkbox = screen.getByRole('checkbox', {
-            name: /arthritis|back pain/i,
+            name: /osteoarthritis|chronic back/i,
           }) as HTMLInputElement;
           expect(checkbox.checked).toBe(true);
         });
@@ -443,7 +443,7 @@ describe('State Management Integration Tests', () => {
 
       // Select a condition
       const conditionCheckbox = await screen.findByRole('checkbox', {
-        name: /arthritis|back pain/i,
+        name: /osteoarthritis|chronic back/i,
       });
       await user.click(conditionCheckbox);
 
@@ -516,7 +516,7 @@ describe('State Management Integration Tests', () => {
       // Set up assessment data
       act(() => {
         result.current.updateResponse({
-          conditionType: 'arthritis',
+          conditionType: 'osteoarthritis',
           painLevel: 7,
           sensations: ['burning', 'tingling'],
           currentTreatments: ['medications'],
@@ -525,7 +525,7 @@ describe('State Management Integration Tests', () => {
       });
 
       // Results should be generated from this state
-      expect(result.current.state.response.conditionType).toBe('arthritis');
+      expect(result.current.state.response.conditionType).toBe('osteoarthritis');
       expect(result.current.state.response.painLevel).toBe(7);
       expect(result.current.state.response.sensations).toContain('burning');
     });
@@ -637,7 +637,7 @@ describe('State Management Integration Tests', () => {
 
       // Perform successful action
       act(() => {
-        result.current.updateResponse({ conditionType: 'arthritis' });
+        result.current.updateResponse({ conditionType: 'osteoarthritis' });
       });
 
       // Error should be cleared

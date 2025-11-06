@@ -394,7 +394,7 @@ describe('saveProgress', () => {
   const validPayload: SaveProgressPayload = {
     assessmentId: 'test-123',
     progress: {
-      conditions: ['chronic-back-pain'],
+      conditions: ['chronic-back-neck'],
       sensations: ['sharp', 'dull'],
       currentPage: '/page-2',
     },

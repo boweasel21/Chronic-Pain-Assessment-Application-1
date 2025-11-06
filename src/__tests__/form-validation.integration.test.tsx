@@ -433,7 +433,7 @@ describe('Form Validation Integration Tests', () => {
 
       // Select at least one condition
       const checkbox = await screen.findByRole('checkbox', {
-        name: /arthritis|back pain/i,
+        name: /chronic back|pelvic pain/i,
       });
       await user.click(checkbox);
 

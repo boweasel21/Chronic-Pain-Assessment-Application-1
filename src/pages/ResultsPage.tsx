@@ -134,9 +134,8 @@ const ResultsPage = (): JSX.Element => {
   const nonTreatableListText = nonTreatableNames.length > 0 ? formatList(nonTreatableNames) : '';
 
   const sensationNames = personalizationResult.sensations.map((sensation) => sensation.name);
-  const sensationListText = sensationNames.length > 0
-    ? formatList(sensationNames)
-    : 'the pain signals you described';
+  const sensationListText =
+    sensationNames.length > 0 ? sensationNames.join(', ') : 'the pain signals you described';
 
   const treatmentCards = personalizationResult.treatmentCards;
 
@@ -245,8 +244,11 @@ const ResultsPage = (): JSX.Element => {
           <p className={styles.paragraph}>That's why you've tried "everything", but nothing lasts.</p>
           <p className={styles.paragraph}>Because the cellular damage was never addressed.</p>
           <p className={styles.note}>
-            *NOTE:* Currently, no service, product, therapy, or treatment on the market focuses on the Primary Cell to eliminate cellular damage.
+            <strong>Note:</strong> Currently, no other service, product, therapy, or treatment on the market focuses on the Primary Cell to eliminate cellular damage.
           </p>
+        </motion.section>
+
+        <motion.section className={styles.summaryFooter} variants={itemVariants}>
           <p className={styles.paragraph}>Take a screenshot of this page. (We can also email it to you if you like.)</p>
           <p className={styles.paragraph}>Now for the good stuff…</p>
         </motion.section>

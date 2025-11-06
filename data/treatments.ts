@@ -8,6 +8,7 @@ export interface Treatment {
   name: string;
   category: 'medications' | 'procedures' | 'devices' | 'therapies' | 'mindBody';
   whatItFixed: string; // Description of what this treatment addresses for results page
+  parentId?: string;
 }
 
 export const TREATMENTS: readonly Treatment[] = [
@@ -25,10 +26,80 @@ export const TREATMENTS: readonly Treatment[] = [
     whatItFixed: 'Pain perception by numbing nerve signals.',
   },
   {
+    id: 'prescription-painkillers-hydrocodone',
+    name: 'Hydrocodone (Vicodin, Norco)',
+    category: 'medications',
+    parentId: 'prescription-painkillers',
+    whatItFixed: 'Acute pain by binding opioid receptors to mute signals.',
+  },
+  {
+    id: 'prescription-painkillers-oxycodone',
+    name: 'Oxycodone (OxyContin, Percocet)',
+    category: 'medications',
+    parentId: 'prescription-painkillers',
+    whatItFixed: 'Severe pain signaling through opioid receptor activation.',
+  },
+  {
+    id: 'prescription-painkillers-morphine',
+    name: 'Morphine (MS Contin, Kadian)',
+    category: 'medications',
+    parentId: 'prescription-painkillers',
+    whatItFixed: 'Spinal cord pain transmission through opioid receptor binding.',
+  },
+  {
+    id: 'prescription-painkillers-fentanyl',
+    name: 'Fentanyl (Duragesic patches)',
+    category: 'medications',
+    parentId: 'prescription-painkillers',
+    whatItFixed: 'Breakthrough pain signals via potent opioid suppression.',
+  },
+  {
+    id: 'prescription-painkillers-codeine',
+    name: 'Codeine (Tylenol with Codeine)',
+    category: 'medications',
+    parentId: 'prescription-painkillers',
+    whatItFixed: 'Moderate pain perception via opioid receptor occupation.',
+  },
+  {
+    id: 'prescription-painkillers-hydromorphone',
+    name: 'Hydromorphone (Dilaudid)',
+    category: 'medications',
+    parentId: 'prescription-painkillers',
+    whatItFixed: 'Strong pain signals with rapid opioid receptor binding.',
+  },
+  {
+    id: 'prescription-painkillers-methadone',
+    name: 'Methadone',
+    category: 'medications',
+    parentId: 'prescription-painkillers',
+    whatItFixed: 'Chronic pain cycles by dampening nerve signaling.',
+  },
+  {
+    id: 'prescription-painkillers-tramadol',
+    name: 'Tramadol (Ultram)',
+    category: 'medications',
+    parentId: 'prescription-painkillers',
+    whatItFixed: 'Mixed opioid and neurotransmitter signaling for pain relief.',
+  },
+  {
     id: 'muscle-relaxers',
     name: 'Muscle relaxers',
     category: 'medications',
     whatItFixed: 'Muscle spasms and tension.',
+  },
+  {
+    id: 'muscle-relaxers-cyclobenzaprine',
+    name: 'Cyclobenzaprine (Flexeril)',
+    category: 'medications',
+    parentId: 'muscle-relaxers',
+    whatItFixed: 'Muscle spasms through central nervous system sedation.',
+  },
+  {
+    id: 'muscle-relaxers-baclofen',
+    name: 'Baclofen',
+    category: 'medications',
+    parentId: 'muscle-relaxers',
+    whatItFixed: 'Spasticity by calming overactive muscle reflexes.',
   },
   {
     id: 'nerve-pain-medicines',
@@ -37,10 +108,45 @@ export const TREATMENTS: readonly Treatment[] = [
     whatItFixed: 'Electrical nerve firing patterns.',
   },
   {
+    id: 'nerve-pain-medicines-gabapentin',
+    name: 'Gabapentin',
+    category: 'medications',
+    parentId: 'nerve-pain-medicines',
+    whatItFixed: 'Nerve excitability by modulating calcium channels.',
+  },
+  {
+    id: 'nerve-pain-medicines-pregabalin',
+    name: 'Pregabalin (Lyrica)',
+    category: 'medications',
+    parentId: 'nerve-pain-medicines',
+    whatItFixed: 'Overactive nerve firing via calcium channel dampening.',
+  },
+  {
     id: 'antidepressants-for-pain',
     name: 'Antidepressants for pain',
     category: 'medications',
     whatItFixed: 'Brain chemistry tied to pain modulation.',
+  },
+  {
+    id: 'antidepressants-duloxetine',
+    name: 'Duloxetine (Cymbalta)',
+    category: 'medications',
+    parentId: 'antidepressants-for-pain',
+    whatItFixed: 'Serotonin and norepinephrine regulation to mute pain.',
+  },
+  {
+    id: 'antidepressants-amitriptyline',
+    name: 'Amitriptyline',
+    category: 'medications',
+    parentId: 'antidepressants-for-pain',
+    whatItFixed: 'Sleep disruption and nerve pain signals.',
+  },
+  {
+    id: 'antidepressants-nortriptyline',
+    name: 'Nortriptyline',
+    category: 'medications',
+    parentId: 'antidepressants-for-pain',
+    whatItFixed: 'Neuropathic pain via serotonin/norepinephrine balance.',
   },
   {
     id: 'steroid-pills',
@@ -49,10 +155,45 @@ export const TREATMENTS: readonly Treatment[] = [
     whatItFixed: 'Inflammation and swelling.',
   },
   {
+    id: 'steroid-pills-prednisone',
+    name: 'Prednisone',
+    category: 'medications',
+    parentId: 'steroid-pills',
+    whatItFixed: 'Inflammatory cascades through immune suppression.',
+  },
+  {
+    id: 'steroid-pills-medrol',
+    name: 'Methylprednisolone (Medrol Dose Pack)',
+    category: 'medications',
+    parentId: 'steroid-pills',
+    whatItFixed: 'Acute inflammation via systemic corticosteroid dosing.',
+  },
+  {
     id: 'sleeping-pills',
     name: 'Sleeping pills',
     category: 'medications',
     whatItFixed: 'Sleep disruption created by pain.',
+  },
+  {
+    id: 'sleeping-pills-zolpidem',
+    name: 'Zolpidem (Ambien)',
+    category: 'medications',
+    parentId: 'sleeping-pills',
+    whatItFixed: 'Sleep onset via GABA receptor activation.',
+  },
+  {
+    id: 'sleeping-pills-eszopiclone',
+    name: 'Eszopiclone (Lunesta)',
+    category: 'medications',
+    parentId: 'sleeping-pills',
+    whatItFixed: 'Sleep maintenance through calming brain activity.',
+  },
+  {
+    id: 'sleeping-pills-trazodone',
+    name: 'Trazodone',
+    category: 'medications',
+    parentId: 'sleeping-pills',
+    whatItFixed: 'Sleep continuity via serotonin modulation.',
   },
   {
     id: 'pain-creams-patches',
@@ -178,6 +319,12 @@ export const TREATMENTS: readonly Treatment[] = [
     category: 'devices',
     whatItFixed: 'Muscle relaxation and circulation.',
   },
+  {
+    id: 'natural-supplements',
+    name: 'Natural health supplements (Magnesium, Turmeric, Ginger, etc.)',
+    category: 'devices',
+    whatItFixed: 'Basic nutritional support and inflammation reduction.',
+  },
 
   // Therapies, Bodywork & Lifestyle
   {
@@ -271,6 +418,13 @@ export const getTreatmentById = (id: string): Treatment | undefined => {
  */
 export const getTreatmentsByCategory = (category: TreatmentCategory): Treatment[] => {
   return TREATMENTS.filter((treatment) => treatment.category === category);
+};
+
+/**
+ * Get sub-treatments for a parent treatment id
+ */
+export const getSubTreatments = (parentId: string): Treatment[] => {
+  return TREATMENTS.filter((treatment) => treatment.parentId === parentId);
 };
 
 /**

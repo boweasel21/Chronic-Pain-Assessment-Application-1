@@ -12,7 +12,7 @@ export interface Sensation {
 export const SENSATIONS: readonly Sensation[] = [
   {
     id: 'sharp-stabbing',
-    name: 'Sharp or stabbing or shooting pain',
+    name: 'Sharp, stabbing, shooting pain',
     description: 'Feels like a knife, needle, or electric jolt.',
   },
   {
@@ -22,22 +22,22 @@ export const SENSATIONS: readonly Sensation[] = [
   },
   {
     id: 'radiating',
-    name: 'Pain that radiates down your arm/leg or across your body',
+    name: 'Pain that radiates down your arm/leg, across your body',
     description: '',
   },
   {
     id: 'aching',
-    name: 'Persistent dull aching pain',
+    name: 'Persistent, dull, aching pain',
     description: "Feels like a deep, constant soreness or heaviness that just doesn't go away.",
   },
   {
     id: 'tingling',
-    name: 'Tingling or numbness ("pins-and-needles") or loss of feeling',
+    name: 'Tingling, numbness ("pins-and-needles"), loss of feeling',
     description: '',
   },
   {
     id: 'muscle-tightness',
-    name: 'Muscle tightness or spasms or cramps',
+    name: 'Muscle tightness, spasms, cramps',
     description: 'Constant or sudden, tightening or knotting feeling.',
   },
   {
@@ -47,7 +47,7 @@ export const SENSATIONS: readonly Sensation[] = [
   },
   {
     id: 'tenderness',
-    name: 'Tenderness or sensitivity to touch or movement',
+    name: 'Tenderness, sensitivity to touch, sensitivity to movement',
     description: 'Hurts when touched or with movement.',
   },
   {

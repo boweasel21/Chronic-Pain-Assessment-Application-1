@@ -46,8 +46,11 @@ const DetailedProcess: React.FC = () => {
           animate="animate"
         >
           <h1 className={styles.headline}>
-            We don't manage your pain—we eliminate it by repairing the cellular source.
+            Repairing Your Primary Cell: The Key to Fixing Your Pain
           </h1>
+          <p className={styles.lead}>
+            We don&apos;t manage your pain—we eliminate it by repairing the cellular source.
+          </p>
 
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>How We Do It:</h2>

@@ -42,7 +42,7 @@ describe('Assessment Flow Integration Tests', () => {
 
       // Page 2: Cellular Science - Select condition
       const conditionCheckbox = await screen.findByRole('checkbox', {
-        name: /arthritis|back pain|fibromyalgia/i,
+        name: /chronic back|sciatica|pelvic pain/i,
       });
       await user.click(conditionCheckbox);
 
@@ -128,7 +128,7 @@ describe('Assessment Flow Integration Tests', () => {
 
       // Select a condition
       const conditionCheckbox = await screen.findByRole('checkbox', {
-        name: /arthritis/i,
+        name: /chronic back/i,
       });
       await user.click(conditionCheckbox);
 
@@ -149,7 +149,7 @@ describe('Assessment Flow Integration Tests', () => {
         // Condition should still be selected
         await waitFor(() => {
           const checkbox = screen.getByRole('checkbox', {
-            name: /arthritis/i,
+            name: /chronic back/i,
           }) as HTMLInputElement;
           expect(checkbox.checked).toBe(true);
         });
@@ -165,7 +165,7 @@ describe('Assessment Flow Integration Tests', () => {
       // Select only non-treatable condition
       // Note: This assumes there's a non-treatable condition in the data
       const nonTreatableCheckbox = await screen.findByRole('checkbox', {
-        name: /cancer|terminal|non-treatable/i,
+        name: /autoimmune|fibromyalgia|chronic fatigue/i,
       });
 
       if (nonTreatableCheckbox) {

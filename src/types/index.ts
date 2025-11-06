@@ -13,31 +13,29 @@ export type QualificationStatus = 'qualified' | 'disqualified' | 'pending';
  * This includes all specific condition IDs plus 'other' for unlisted conditions
  */
 export type ConditionType =
-  | 'fibromyalgia'
+  | 'physical-injury'
+  | 'post-traumatic-pain'
+  | 'whiplash'
+  | 'tendon-ligament-pain'
+  | 'chronic-back-neck'
+  | 'osteoarthritis'
+  | 'degenerative-bone'
+  | 'herniated-disc'
+  | 'bulging-disc'
+  | 'spinal-stenosis'
+  | 'phantom-limb'
+  | 'sciatica'
+  | 'sacroiliac-dysfunction'
+  | 'spontaneous-pain'
+  | 'pelvic-pain'
   | 'chronic-fatigue'
-  | 'neuropathy'
-  | 'complex-regional'
-  | 'migraine'
-  | 'back-pain'
-  | 'arthritis'
-  | 'lupus'
-  | 'lyme'
-  | 'neck-pain'
-  | 'joint-pain'
-  | 'muscle-pain'
-  | 'tension-headaches'
-  | 'autoimmune'
-  | 'ehlers-danlos'
+  | 'autoimmune-disease'
+  | 'fibromyalgia'
+  | 'infectious-disease'
+  | 'traumatic-brain-injury'
+  | 'endocrine-disorder'
+  | 'gastrointestinal-disorder'
   | 'cancer-pain'
-  | 'post-surgical'
-  | 'active-injury'
-  | 'severe-psychiatric'
-  | 'kidney-disease'
-  | 'liver-disease'
-  | 'heart-failure'
-  | 'unstable-cardiac'
-  | 'severe-copd'
-  | 'dementia'
   | 'rheumatoid-arthritis'
   | 'other';
 
@@ -139,6 +137,8 @@ export interface AssessmentResponse {
   budgetLevel?: string | null;
   affordabilityResponse?: string | null;
   affordabilityConfirmed?: boolean;
+  futureSpendOutlook?: 'yes' | 'no' | null;
+  suicidalRiskAnswer?: 'yes' | 'no' | null;
   additionalInfo?: string | null;
 
   // Lead Capture

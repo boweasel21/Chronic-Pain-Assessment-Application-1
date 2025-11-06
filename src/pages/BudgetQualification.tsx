@@ -28,20 +28,20 @@ const BUDGET_OPTIONS: readonly BudgetOption[] = [
   },
   {
     id: 'mid-1',
-    label: '$3,000-$5,000',
-    range: '$3,000-$5,000',
+    label: '$3,000-$10,000',
+    range: '$3,000-$10,000',
     description: '',
   },
   {
     id: 'mid-2',
-    label: '$5,000-$10,000',
-    range: '$5,000-$10,000',
+    label: '$10,000-$25,000',
+    range: '$10,000-$25,000',
     description: '',
   },
   {
     id: 'high',
-    label: '$10,000+',
-    range: '$10,000+',
+    label: '$25,000+',
+    range: '$25,000+',
     description: '',
   },
 ] as const;
@@ -122,87 +122,94 @@ const BudgetQualification = (): JSX.Element => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {/* Question */}
         <motion.div
-          className={styles.questionSection}
-          initial={{ opacity: 0, y: -20 }}
+          className={styles.card}
+          initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
         >
-          <h1 className={styles.question}>
-            On average, how much do you currently pay out of pocket on your chronic pain every year (deductible, etc.)?
-          </h1>
-        </motion.div>
+          {/* Question */}
+          <motion.div
+            className={styles.questionSection}
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
+            <h1 className={styles.question}>
+              On average, how much do you currently pay out of pocket on your chronic pain every year (deductible, etc.)?
+            </h1>
+          </motion.div>
 
-        {/* Budget Options */}
-        <div className={styles.options} role="radiogroup" aria-label="Budget range">
-          {BUDGET_OPTIONS.map((option, index) => {
-            const isSelected = selectedBudget === option.id;
+          {/* Budget Options */}
+          <div className={styles.options} role="radiogroup" aria-label="Budget range">
+            {BUDGET_OPTIONS.map((option, index) => {
+              const isSelected = selectedBudget === option.id;
 
-            return (
-              <motion.div
-                key={option.id}
-                className={styles.optionWrapper}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 + index * 0.1, duration: 0.3 }}
-              >
-                <motion.button
-                  className={`${styles.option} ${isSelected ? styles.optionSelected : ''}`}
-                  onClick={() => handleSelect(option.id)}
-                  onKeyDown={(e) => handleKeyDown(e, option.id)}
-                  role="radio"
-                  aria-checked={isSelected}
-                  aria-label={option.label}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.15 }}
+              return (
+                <motion.div
+                  key={option.id}
+                  className={styles.optionWrapper}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.2 + index * 0.1, duration: 0.3 }}
                 >
-                  {/* Radio Button */}
-                  <div className={styles.radioContainer}>
-                    <motion.div
-                      className={styles.radioOuter}
-                      animate={{
-                        borderColor: isSelected
-                          ? 'rgba(29, 44, 73, 1)'
-                          : 'rgba(226, 211, 163, 1)',
-                      }}
-                      transition={{ duration: 0.2 }}
-                    >
+                  <motion.button
+                    className={`${styles.option} ${isSelected ? styles.optionSelected : ''}`}
+                    onClick={() => handleSelect(option.id)}
+                    onKeyDown={(e) => handleKeyDown(e, option.id)}
+                    role="radio"
+                    aria-checked={isSelected}
+                    aria-label={option.label}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    {/* Radio Button */}
+                    <div className={styles.radioContainer}>
                       <motion.div
-                        className={styles.radioInner}
-                        initial={{ scale: 0 }}
-                        animate={{ scale: isSelected ? 1 : 0 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      />
-                    </motion.div>
-                  </div>
+                        className={styles.radioOuter}
+                        animate={{
+                          borderColor: isSelected
+                            ? 'rgba(29, 44, 73, 1)'
+                            : 'rgba(226, 211, 163, 1)',
+                        }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <motion.div
+                          className={styles.radioInner}
+                          initial={{ scale: 0 }}
+                          animate={{ scale: isSelected ? 1 : 0 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                        />
+                      </motion.div>
+                    </div>
 
-                  {/* Content */}
-                  <div className={styles.optionContent}>
-                    <h3 className={styles.optionLabel}>{option.label}</h3>
-                    {option.description && (
-                      <p className={styles.optionDescription}>{option.description}</p>
+                    {/* Content */}
+                    <div className={styles.optionContent}>
+                      <h3 className={styles.optionLabel}>{option.label}</h3>
+                      {option.description && (
+                        <p className={styles.optionDescription}>{option.description}</p>
+                      )}
+                    </div>
+
+                    {/* Checkmark for selected */}
+                    {isSelected && (
+                      <motion.div
+                        className={styles.checkmark}
+                        initial={{ scale: 0, rotate: -90 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                        aria-hidden="true"
+                      >
+                        ✓
+                      </motion.div>
                     )}
-                  </div>
-
-                  {/* Checkmark for selected */}
-                  {isSelected && (
-                    <motion.div
-                      className={styles.checkmark}
-                      initial={{ scale: 0, rotate: -90 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                      aria-hidden="true"
-                    >
-                      ✓
-                    </motion.div>
-                  )}
                 </motion.button>
               </motion.div>
             );
           })}
-        </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

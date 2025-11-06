@@ -1,10 +1,4 @@
-/**
- * Cellular Science Page Component
- * Educates users about RNA storage and Primary Cell concept
- * Collects condition data with treatable/non-treatable categorization
- */
-
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAssessment } from '@context/AssessmentContext';
@@ -46,9 +40,17 @@ import styles from './CellularSciencePage.module.css';
  *
  * @returns {JSX.Element} Cellular science page component
  */
+const TREATABLE_GROUP_ORDER: string[] = [
+  'Injury-Related Pain',
+  'Chronic Pain Conditions',
+  'Neuropathic Pain',
+  'Unknown Origin of Pain',
+  'Pelvic Pain',
+];
+
 const CellularSciencePage: React.FC = () => {
   const navigate = useNavigate();
-  const { updateResponse, state, disqualify } = useAssessment();
+  const { updateResponse, disqualify } = useAssessment();
 
   /**
    * Accessibility: Focus management on page load
@@ -57,12 +59,22 @@ const CellularSciencePage: React.FC = () => {
 
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
   const [otherConditions, setOtherConditions] = useState<string>('');
-  const [treatableExpanded, setTreatableExpanded] = useState<boolean>(true);
-  const [nonTreatableExpanded, setNonTreatableExpanded] = useState<boolean>(true);
+  const [treatableExpanded, setTreatableExpanded] = useState<boolean>(false);
+  const [nonTreatableExpanded, setNonTreatableExpanded] = useState<boolean>(false);
   const [validationError, setValidationError] = useState<string>('');
 
   const treatableConditions = getTreatableConditions();
   const nonTreatableConditions = getNonTreatableConditions();
+  const treatableGroups = useMemo(() => {
+    return treatableConditions.reduce<Record<string, Condition[]>>((acc, condition) => {
+      const group = condition.group ?? 'Other Categories';
+      if (!acc[group]) {
+        acc[group] = [];
+      }
+      acc[group].push(condition);
+      return acc;
+    }, {});
+  }, [treatableConditions]);
 
   /**
    * Handles condition checkbox toggle
@@ -261,18 +273,21 @@ const CellularSciencePage: React.FC = () => {
         {/* Header */}
         <motion.header className={styles.cellular__header} variants={itemVariants}>
           <h1 className={styles.cellular__title}>
-            Recent studies published in a major scientific journal prove that bodily memories from injuries are stored in RNA inside cells.
+            This discovery reveals how chronic pain is a cellular issue.
           </h1>
         </motion.header>
 
-        {/* RNA Storage Explanation */}
+        {/* Headline Callout */}
         <motion.section
           className={styles.cellular__science}
           variants={itemVariants}
         >
+          <h2 className={styles.cellular__scienceTitle}>
+            Recent studies published in a major scientific journal prove that bodily memories from injuries are stored in RNA inside cells.
+          </h2>
           <div className={styles.cellular__scienceContent}>
             <p className={styles.cellular__scienceText}>
-              But here&apos;s what&apos;s revolutionary: scientists discovered these damaged cellular memories are stored in your &ldquo;Primary Cell&rdquo;—a master template cell that controls every other cell in your body.
+              <strong>But here&apos;s what&apos;s revolutionary:</strong> scientists discovered these damaged cellular memories are stored in your &ldquo;Primary Cell&rdquo;—a master template cell that controls every other cell in your body.
             </p>
             <p className={styles.cellular__scienceText}>
               While your regular body cells die and regenerate every few months, your Primary Cell remains constant throughout your entire life.
@@ -290,7 +305,7 @@ const CellularSciencePage: React.FC = () => {
               This is why your chronic pain persists even as your body&apos;s tissues regenerate—because the cellular damage in your Primary Cell keeps creating new damaged cells that match the original injury pattern.
             </p>
             <p className={styles.cellular__primaryText}>
-              Next, let&apos;s determine if your chronic pain type can be related to Primary Cell damage or something else…
+              Next, let&apos;s determine if your chronic pain type can be related to Primary Cell damage we can repair…
             </p>
           </div>
         </motion.section>
@@ -340,17 +355,50 @@ const CellularSciencePage: React.FC = () => {
                   exit="collapsed"
                   variants={collapseVariants}
                 >
-                  <div className={styles.cellular__checkboxGrid}>
-                    {treatableConditions.map((condition: Condition) => (
-                      <Checkbox
-                        key={condition.id}
-                        id={`condition-${condition.id}`}
-                        label={condition.name}
-                        checked={selectedConditions.includes(condition.id)}
-                        onChange={() => handleConditionToggle(condition.id)}
-                        aria-label={`Select ${condition.name} as a treatable condition`}
-                      />
-                    ))}
+                  <div className={styles.cellular__groupContainer}>
+                    {TREATABLE_GROUP_ORDER.map((group) => {
+                      const groupConditions = treatableGroups[group];
+                      if (!groupConditions || groupConditions.length === 0) {
+                        return null;
+                      }
+                      return (
+                        <div key={group} className={styles.cellular__group}>
+                          <h4 className={styles.cellular__groupTitle}>{group}</h4>
+                          <div className={styles.cellular__checkboxGrid}>
+                            {groupConditions.map((condition: Condition) => (
+                              <Checkbox
+                                key={condition.id}
+                                id={`condition-${condition.id}`}
+                                label={condition.name}
+                                checked={selectedConditions.includes(condition.id)}
+                                onChange={() => handleConditionToggle(condition.id)}
+                                aria-label={`Select ${condition.name} as a treatable condition`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {Object.entries(treatableGroups)
+                      .filter(([group]) => !TREATABLE_GROUP_ORDER.includes(group))
+                      .map(([group, groupConditions]) => (
+                        <div key={group} className={styles.cellular__group}>
+                          <h4 className={styles.cellular__groupTitle}>{group}</h4>
+                          <div className={styles.cellular__checkboxGrid}>
+                            {groupConditions.map((condition: Condition) => (
+                              <Checkbox
+                                key={condition.id}
+                                id={`condition-${condition.id}`}
+                                label={condition.name}
+                                checked={selectedConditions.includes(condition.id)}
+                                onChange={() => handleConditionToggle(condition.id)}
+                                aria-label={`Select ${condition.name} as a treatable condition`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      ))}
                   </div>
                 </motion.div>
               )}

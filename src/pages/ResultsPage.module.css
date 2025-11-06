@@ -165,8 +165,19 @@
 .note {
   margin: 0;
   font-size: clamp(0.95rem, 2.2vw, 1.05rem);
-  font-style: italic;
-  color: rgba(29, 44, 73, 0.85);
+  color: rgba(29, 44, 73, 0.9);
+}
+
+.note strong {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.summaryFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: -12px;
 }
 
 .nextSection {

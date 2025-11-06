@@ -14,14 +14,16 @@ export const createMockAssessment = (
   overrides: Partial<AssessmentResponse> = {}
 ): AssessmentResponse => {
   return {
-    conditions: ['fibromyalgia'],
+    conditions: ['chronic-back-neck'],
     sensations: ['burning'],
     duration: '2-to-5-years',
     intensity: 7,
-    previousTreatments: ['gabapentinoids', 'physical-therapy'],
+    previousTreatments: ['prescription-painkillers-oxycodone', 'physical-therapy'],
     hasBudget: true,
     budgetRange: '5k-15k',
     urgency: 'within-month',
+    futureSpendOutlook: 'yes',
+    suicidalRiskAnswer: 'no',
     activityImpact: 'significant',
     goals: 'Reduce pain and improve daily function',
     name: 'John Doe',
@@ -39,7 +41,7 @@ export const createMockAssessment = (
  */
 export const createMockQualifiedAssessment = (): AssessmentResponse => {
   return createMockAssessment({
-    conditions: ['fibromyalgia', 'chronic-fatigue', 'neuropathy'],
+    conditions: ['chronic-back-neck', 'sciatica', 'tendon-ligament-pain'],
   });
 };
 
@@ -48,7 +50,7 @@ export const createMockQualifiedAssessment = (): AssessmentResponse => {
  */
 export const createMockDisqualifiedAssessment = (): AssessmentResponse => {
   return createMockAssessment({
-    conditions: ['cancer-pain', 'active-injury'],
+    conditions: ['autoimmune-disease', 'chronic-fatigue'],
   });
 };
 
@@ -57,7 +59,7 @@ export const createMockDisqualifiedAssessment = (): AssessmentResponse => {
  */
 export const createMockMixedConditionsAssessment = (): AssessmentResponse => {
   return createMockAssessment({
-    conditions: ['fibromyalgia', 'cancer-pain'],
+    conditions: ['chronic-back-neck', 'autoimmune-disease'],
   });
 };
 
@@ -76,14 +78,14 @@ export const createMockNoTreatmentsAssessment = (): AssessmentResponse => {
 export const createMockManyTreatmentsAssessment = (): AssessmentResponse => {
   return createMockAssessment({
     previousTreatments: [
-      'opioids',
-      'nsaids',
-      'gabapentinoids',
+      'prescription-painkillers-hydrocodone',
+      'otc-painkillers',
+      'nerve-pain-medicines-gabapentin',
       'physical-therapy',
-      'chiropractic',
+      'chiropractic-care',
       'acupuncture',
-      'cbt',
-      'tens',
+      'mindfulness',
+      'tens-unit',
     ],
   });
 };
@@ -103,7 +105,7 @@ export const createMockNoBudgetAssessment = (): AssessmentResponse => {
  */
 export const createMockIncompleteAssessment = (): Partial<AssessmentResponse> => {
   return {
-    conditions: ['fibromyalgia'],
+    conditions: ['chronic-back-neck'],
     // Missing required fields
   };
 };

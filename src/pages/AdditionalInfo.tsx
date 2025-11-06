@@ -24,9 +24,12 @@ import styles from './AdditionalInfo.module.css';
  */
 const AdditionalInfo = (): JSX.Element => {
   const navigate = useNavigate();
-  const { updateResponse } = useAssessment();
+  const { updateResponse, disqualify } = useAssessment();
 
   const [additionalInfo, setAdditionalInfo] = useState('');
+  const [futureSpendAnswer, setFutureSpendAnswer] = useState<'yes' | 'no' | null>(null);
+  const [suicidalRiskAnswer, setSuicidalRiskAnswer] = useState<'yes' | 'no' | null>(null);
+  const [showValidationError, setShowValidationError] = useState(false);
   const [charCount, setCharCount] = useState(0);
 
   const MAX_CHARS = 1000;
@@ -42,6 +45,12 @@ const AdditionalInfo = (): JSX.Element => {
         const loadedInfo = data.additionalInfo || '';
         const sanitized = sanitizeText(loadedInfo, MAX_CHARS);
         setAdditionalInfo(sanitized);
+        if (data.futureSpendAnswer === 'yes' || data.futureSpendAnswer === 'no') {
+          setFutureSpendAnswer(data.futureSpendAnswer);
+        }
+        if (data.suicidalRiskAnswer === 'yes' || data.suicidalRiskAnswer === 'no') {
+          setSuicidalRiskAnswer(data.suicidalRiskAnswer);
+        }
       } catch (error) {
         setAdditionalInfo('');
       }
@@ -60,12 +69,16 @@ const AdditionalInfo = (): JSX.Element => {
    */
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      const data = { additionalInfo };
+      const data = {
+        additionalInfo: sanitizeText(additionalInfo, MAX_CHARS),
+        futureSpendAnswer,
+        suicidalRiskAnswer,
+      };
       localStorage.setItem('assessment_additional_info', JSON.stringify(data));
     }, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [additionalInfo]);
+  }, [additionalInfo, futureSpendAnswer, suicidalRiskAnswer]);
 
   /**
    * Handle textarea change with character limit and sanitization
@@ -77,10 +90,10 @@ const AdditionalInfo = (): JSX.Element => {
    */
   const handleChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>): void => {
     const rawValue = event.target.value;
-
     if (rawValue.length <= MAX_CHARS) {
-      const sanitized = sanitizeText(rawValue, MAX_CHARS);
-      setAdditionalInfo(sanitized);
+      setAdditionalInfo(rawValue);
+    } else {
+      setAdditionalInfo(rawValue.substring(0, MAX_CHARS));
     }
   }, []);
 
@@ -91,15 +104,28 @@ const AdditionalInfo = (): JSX.Element => {
    * SECURITY: Ensures sanitized data is submitted to context.
    */
   const handleViewResults = useCallback((): void => {
+    if (!futureSpendAnswer || !suicidalRiskAnswer) {
+      setShowValidationError(true);
+      return;
+    }
+
     const sanitized = sanitizeText(additionalInfo.trim(), MAX_CHARS);
 
     updateResponse({
       additionalInfo: sanitized || null,
+      futureSpendOutlook: futureSpendAnswer,
+      suicidalRiskAnswer,
       completedAt: new Date().toISOString(),
     });
 
+    if (suicidalRiskAnswer === 'yes') {
+      disqualify('suicidal-risk');
+      navigate('/disqualified');
+      return;
+    }
+
     navigate('/results');
-  }, [additionalInfo, updateResponse, navigate]);
+  }, [additionalInfo, futureSpendAnswer, suicidalRiskAnswer, updateResponse, disqualify, navigate]);
 
   /**
    * Calculate character count color
@@ -150,12 +176,97 @@ const AdditionalInfo = (): JSX.Element => {
           <h2 className={styles.question}>Is there anything else you'd like us to know?</h2>
         </motion.div>
 
+        {/* Future Spend Question */}
+        <motion.section
+          className={styles.decisionSection}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45, duration: 0.5 }}
+        >
+          <h3 className={styles.decisionTitle}>
+            If you don't get your pain fixed, do you see yourself paying as much or more for chronic pain relief in the future?
+          </h3>
+          <div className={styles.decisionButtons}>
+            <Button
+              variant={futureSpendAnswer === 'yes' ? 'primary' : 'secondary'}
+              size="large"
+              onClick={() => {
+                setFutureSpendAnswer('yes');
+                setShowValidationError(false);
+              }}
+              aria-pressed={futureSpendAnswer === 'yes'}
+            >
+              Yes
+            </Button>
+            <Button
+              variant={futureSpendAnswer === 'no' ? 'primary' : 'secondary'}
+              size="large"
+              onClick={() => {
+                setFutureSpendAnswer('no');
+                setShowValidationError(false);
+              }}
+              aria-pressed={futureSpendAnswer === 'no'}
+            >
+              No
+            </Button>
+          </div>
+        </motion.section>
+
+        {/* Suicidal Ideation Question */}
+        <motion.section
+          className={styles.decisionSection}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55, duration: 0.5 }}
+        >
+          <h3 className={styles.decisionTitle}>
+            Have you had suicidal thoughts, made a plan, or attempted to harm yourself?
+          </h3>
+          <p className={styles.decisionDescription}>
+            If you answer “Yes”, we’ll provide resources that can support you immediately.
+          </p>
+          <div className={styles.decisionButtons}>
+            <Button
+              variant={suicidalRiskAnswer === 'yes' ? 'primary' : 'secondary'}
+              size="large"
+              onClick={() => {
+                setSuicidalRiskAnswer('yes');
+                setShowValidationError(false);
+              }}
+              aria-pressed={suicidalRiskAnswer === 'yes'}
+            >
+              Yes
+            </Button>
+            <Button
+              variant={suicidalRiskAnswer === 'no' ? 'primary' : 'secondary'}
+              size="large"
+              onClick={() => {
+                setSuicidalRiskAnswer('no');
+                setShowValidationError(false);
+              }}
+              aria-pressed={suicidalRiskAnswer === 'no'}
+            >
+              No
+            </Button>
+          </div>
+        </motion.section>
+
+        {showValidationError && (
+          <motion.div
+            className={styles.validationMessage}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            Please answer the two questions above before continuing.
+          </motion.div>
+        )}
+
         {/* Textarea */}
         <motion.div
           className={styles.textareaSection}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
+          transition={{ delay: 0.65, duration: 0.5 }}
         >
           <div className={styles.textareaWrapper}>
             <textarea

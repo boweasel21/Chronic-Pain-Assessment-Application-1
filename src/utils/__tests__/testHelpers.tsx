@@ -54,7 +54,7 @@ export const createMockAssessment = (
   overrides: Partial<AssessmentResponse> = {}
 ): AssessmentResponse => {
   return {
-    conditions: ['chronic-back-pain', 'knee-pain'],
+    conditions: ['chronic-back-neck', 'tendon-ligament-pain'],
     sensations: ['sharp', 'dull', 'burning'],
     duration: '2-to-5-years',
     intensity: 7,
@@ -62,6 +62,8 @@ export const createMockAssessment = (
     hasBudget: true,
     budgetRange: '15k-30k',
     urgency: 'within-month',
+    futureSpendOutlook: 'yes',
+    suicidalRiskAnswer: 'no',
     activityImpact: 'significant',
     goals: 'I want to be able to play with my grandchildren without pain.',
     name: 'John Doe',
