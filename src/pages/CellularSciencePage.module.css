@@ -23,18 +23,6 @@
 /**
  * Progress Bar Container
  */
-.cellular__progress {
-  /* Layout */
-  position: sticky;
-  top: 0;
-  z-index: 100;
-
-  /* Visual */
-  background-color: #FFFFFF;
-  padding: 16px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
 /**
  * Main Container
  */
@@ -429,10 +417,6 @@
  * Tablet Breakpoint (768px+)
  */
 @media (min-width: 768px) {
-  .cellular__progress {
-    padding: 20px 32px;
-  }
-
   .cellular__container {
     padding: 48px 32px 96px 32px;
   }
@@ -537,10 +521,6 @@
 @media print {
   .cellular {
     background-color: white;
-  }
-
-  .cellular__progress {
-    display: none;
   }
 
   .cellular__science,

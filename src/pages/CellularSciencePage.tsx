@@ -5,7 +5,6 @@ import { useAssessment } from '@context/AssessmentContext';
 import { usePageFocus } from '@hooks/useAccessibility';
 import { Checkbox } from '@components/common/Checkbox';
 import { Button } from '@components/common/Button';
-import ProgressBar from '@components/layout/ProgressBar';
 import {
   CONDITIONS,
   getTreatableConditions,
@@ -259,11 +258,6 @@ const CellularSciencePage: React.FC = () => {
 
   return (
     <div className={styles.cellular}>
-      {/* Progress Bar */}
-      <div className={styles.cellular__progress}>
-        <ProgressBar current={2} total={10} />
-      </div>
-
       <motion.div
         className={styles.cellular__container}
         initial="hidden"

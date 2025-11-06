@@ -71,11 +71,11 @@ const AssessmentLayout: React.FC<AssessmentLayoutProps> = ({ children }) => {
    */
   useEffect(() => {
     if (showProgress) {
-      setLiveMessage(`Step ${currentPage} of ${totalPages}`);
+      setLiveMessage(`Progress updated. You're on section ${currentPage}.`);
     } else {
       setLiveMessage('');
     }
-  }, [currentPage, totalPages, showProgress]);
+  }, [currentPage, showProgress]);
 
   return (
     <div style={styles.container}>
@@ -91,13 +91,6 @@ const AssessmentLayout: React.FC<AssessmentLayoutProps> = ({ children }) => {
             <span style={styles.logoText}>Primary Cell</span>
             <span style={styles.logoSubtext}>Pain Assessment</span>
           </h1>
-          {showProgress && (
-            <div style={styles.pageIndicator} aria-live="polite">
-              <span style={styles.pageText}>
-                Step {currentPage} of {totalPages}
-              </span>
-            </div>
-          )}
         </div>
         {showProgress && (
           <ProgressBar current={currentPage} total={totalPages} />
@@ -203,19 +196,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 500,
     color: 'var(--color-gray-600)',
     lineHeight: 1,
-  },
-
-  pageIndicator: {
-    padding: 'var(--spacing-xs) var(--spacing-md)',
-    backgroundColor: 'var(--color-secondary-cream)',
-    borderRadius: 'var(--radius-full)',
-    border: '1px solid var(--color-gray-300)',
-  },
-
-  pageText: {
-    fontSize: '0.875rem',
-    fontWeight: 600,
-    color: 'var(--color-primary-navy)',
   },
 
   main: {

@@ -63,6 +63,11 @@ export const validateEmail = (email: string): boolean => {
     return false;
   }
 
+  // Disallow consecutive dots which indicate malformed addresses
+  if (sanitized.includes('..')) {
+    return false;
+  }
+
   return VALIDATION_RULES.EMAIL_REGEX.test(sanitized);
 };
 
@@ -106,6 +111,15 @@ export const validatePhone = (phone: string): boolean => {
  */
 export const validateName = (name: string): boolean => {
   if (!name || typeof name !== 'string') {
+    return false;
+  }
+
+  const trimmed = name.trim();
+
+  if (
+    trimmed.length < VALIDATION_RULES.NAME_MIN_LENGTH ||
+    trimmed.length > VALIDATION_RULES.NAME_MAX_LENGTH
+  ) {
     return false;
   }
 

@@ -9,7 +9,6 @@ import { motion } from 'framer-motion';
 import { useAssessment } from '@context/AssessmentContext';
 import { Checkbox } from '@components/common/Checkbox';
 import { Button } from '@components/common/Button';
-import ProgressBar from '@components/layout/ProgressBar';
 import {
   SENSATIONS,
   getSensationsByIds,
@@ -238,11 +237,6 @@ const ConditionConfirmationPage: React.FC = () => {
 
   return (
     <div className={styles.confirmation}>
-      {/* Progress Bar */}
-      <div className={styles.confirmation__progress}>
-        <ProgressBar current={3} total={10} />
-      </div>
-
       <motion.div
         className={styles.confirmation__container}
         initial="hidden"

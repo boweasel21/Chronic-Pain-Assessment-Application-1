@@ -47,6 +47,29 @@ const TEXTAREA_CONFIG: DOMPurify.Config = {
 };
 
 /**
+ * Detect if DOM APIs are available (browser environment)
+ */
+const DOM_AVAILABLE = typeof window !== 'undefined' && typeof window.document !== 'undefined';
+
+/**
+ * Basic HTML tag removal fallback when DOMPurify cannot run (e.g., during SSR)
+ */
+const stripHtmlTags = (value: string): string => value.replace(/<[^>]*>/g, '');
+
+/**
+ * Safely sanitize a string using DOMPurify when available, otherwise fall back to
+ * a lightweight HTML stripping implementation to keep input usable in non-browser
+ * environments (e.g., Node-based tests or server-side rendering).
+ */
+const sanitizeWithDomPurify = (value: string, config: DOMPurify.Config): string => {
+  if (!DOM_AVAILABLE) {
+    return stripHtmlTags(value);
+  }
+
+  return DOMPurify.sanitize(value, config);
+};
+
+/**
  * Sanitizes general text input to prevent XSS attacks
  *
  * @description Removes all HTML tags and dangerous characters while preserving
@@ -74,7 +97,8 @@ export const sanitizeInput = (
   const { maxLength, trim = true, allowFormatting = false } = options;
 
   try {
-    let sanitized = DOMPurify.sanitize(value, allowFormatting ? TEXTAREA_CONFIG : STRICT_CONFIG);
+    const config = allowFormatting ? TEXTAREA_CONFIG : STRICT_CONFIG;
+    let sanitized = sanitizeWithDomPurify(value, config);
 
     if (trim) {
       sanitized = sanitized.trim();
@@ -112,7 +136,7 @@ export const sanitizeEmail = (email: string): string => {
   }
 
   try {
-    let sanitized = DOMPurify.sanitize(email, STRICT_CONFIG);
+    let sanitized = sanitizeWithDomPurify(email, STRICT_CONFIG);
     sanitized = sanitized.trim();
     sanitized = sanitized.replace(/[<>'"]/g, '');
 
@@ -144,7 +168,7 @@ export const sanitizePhone = (phone: string): string => {
   }
 
   try {
-    let sanitized = DOMPurify.sanitize(phone, STRICT_CONFIG);
+    let sanitized = sanitizeWithDomPurify(phone, STRICT_CONFIG);
     sanitized = sanitized.trim();
     sanitized = sanitized.replace(/[^\d\s\-\+\(\)]/g, '');
 
@@ -177,7 +201,7 @@ export const sanitizeName = (name: string, maxLength: number = 100): string => {
   }
 
   try {
-    let sanitized = DOMPurify.sanitize(name, STRICT_CONFIG);
+    let sanitized = sanitizeWithDomPurify(name, STRICT_CONFIG);
     sanitized = sanitized.trim();
     sanitized = sanitized.replace(/[^a-zA-Z\s\-']/g, '');
 

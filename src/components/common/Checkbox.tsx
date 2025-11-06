@@ -188,9 +188,9 @@ export const Checkbox = ({
           {/* Checkmark icon with animation */}
           <motion.svg
             className={styles.checkbox__checkmark}
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             variants={checkmarkVariants}
@@ -199,9 +199,9 @@ export const Checkbox = ({
             aria-hidden="true"
           >
             <motion.path
-              d="M3 8L6.5 11.5L13 4.5"
+              d="M5 12.5L10 17.5L19 8"
               stroke="white"
-              strokeWidth="2.5"
+              strokeWidth="3"
               strokeLinecap="round"
               strokeLinejoin="round"
               initial={{ pathLength: 0 }}

@@ -89,15 +89,9 @@
  * Checkmark icon
  */
 .checkbox__checkmark {
-  /* Positioning */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
   /* Size */
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 
   /* Ensure it's above the background */
   z-index: 1;
