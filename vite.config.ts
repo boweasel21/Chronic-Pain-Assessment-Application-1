@@ -40,6 +40,14 @@ export default defineConfig({
       '.emergent.sh',
       'localhost',
     ],
+    proxy: {
+      // Proxy API requests to backend during development
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 
   build: {
