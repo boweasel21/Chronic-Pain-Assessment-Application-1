@@ -69,8 +69,9 @@
 
 .landing__heroGridContent {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
+  justify-items: center;
 }
 
 .landing__heroCard {
@@ -82,16 +83,18 @@
   display: flex;
   flex-direction: column;
   min-height: 280px;
+  max-width: 560px;
 }
 
 .landing__heroIllustration {
   position: relative;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  min-height: 180px;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 220px;
   padding: 16px;
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   background-position: center;
   color: #f7f4ed;
 }
@@ -100,7 +103,16 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(29, 44, 73, 0.05) 0%, rgba(29, 44, 73, 0.6) 100%);
+  background: linear-gradient(180deg, rgba(29, 44, 73, 0.05) 0%, rgba(29, 44, 73, 0.45) 100%);
+  pointer-events: none;
+}
+
+.landing__heroIllustration::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
   pointer-events: none;
 }
 
@@ -109,7 +121,7 @@
   font-size: 0.85rem;
   line-height: 1.4;
   color: rgba(247, 244, 237, 0.95);
-  max-width: 220px;
+  max-width: 260px;
 }
 
 .landing__heroCopy {

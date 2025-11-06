@@ -1,0 +1,147 @@
+<svg width="640" height="320" viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="injuryTitle injuryDesc">
+  <title id="injuryTitle">Cellular damage before and after structural healing</title>
+  <desc id="injuryDesc">Left panel shows a lower leg with a fractured bone and torn muscle surrounded by pulsing red and indigo dots. Right panel shows the leg structurally healed while the dots remain to illustrate persistent cellular damage.</desc>
+  <defs>
+    <linearGradient id="panelGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f9fafb" />
+      <stop offset="100%" stop-color="#eef2ff" />
+    </linearGradient>
+    <linearGradient id="panelGradientHealed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f7fff9" />
+      <stop offset="100%" stop-color="#dcfce7" />
+    </linearGradient>
+    <linearGradient id="boneGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ede9fe" />
+      <stop offset="100%" stop-color="#c7d2fe" />
+    </linearGradient>
+    <linearGradient id="boneGradientHealed" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e9fef4" />
+      <stop offset="100%" stop-color="#bbf7d0" />
+    </linearGradient>
+    <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#1d2c49" />
+    </marker>
+  </defs>
+
+  <!-- Panels -->
+  <g transform="translate(20,20)">
+    <rect width="280" height="280" rx="20" fill="url(#panelGradient)" stroke="#c4b5fd" stroke-width="2" />
+    <text x="140" y="34" text-anchor="middle" font-family="'Helvetica Neue', Arial" font-size="18" font-weight="600" fill="#1d2c49">Before Cellular Repair</text>
+    <text x="140" y="58" text-anchor="middle" font-family="'Helvetica Neue', Arial" font-size="13" fill="#3f4c6b">Bone fracture + torn muscle. Cellular damage ignites pain.</text>
+  </g>
+  <g transform="translate(340,20)">
+    <rect width="280" height="280" rx="20" fill="url(#panelGradientHealed)" stroke="#86efac" stroke-width="2" />
+    <text x="140" y="34" text-anchor="middle" font-family="'Helvetica Neue', Arial" font-size="18" font-weight="600" fill="#14532d">After Tissue &amp; Bone Heal</text>
+    <text x="140" y="58" text-anchor="middle" font-family="'Helvetica Neue', Arial" font-size="13" fill="#166534">Structure restored, but cellular damage signals keep chronic pain alive.</text>
+  </g>
+
+  <!-- Left leg silhouette -->
+  <g transform="translate(40,85)">
+    <path d="M70,0 C40,40 30,90 40,150 C45,180 60,205 72,230 C84,205 98,180 104,150 C116,90 110,40 82,0 Z" fill="#fef2f2" stroke="#fecaca" stroke-width="3" />
+    <path d="M74,15 C62,45 58,95 70,150 C74,168 80,185 85,205" stroke="url(#boneGradient)" stroke-width="16" stroke-linecap="round" />
+    <path d="M70,108 L86,128" stroke="#f87171" stroke-width="6" stroke-linecap="round" />
+    <path d="M62,95 C83,85 96,100 98,120" stroke="#f43f5e" stroke-width="14" stroke-linecap="round" />
+    <path d="M60,120 C78,140 92,132 100,110" stroke="#be123c" stroke-width="9" stroke-linecap="round" />
+
+    <!-- Cellular dots -->
+    <g fill="#ef4444" opacity="0.9">
+      <circle cx="68" cy="90" r="7">
+        <animate attributeName="r" values="6;9;6" dur="1.4s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="1.4s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="94" cy="108" r="6">
+        <animate attributeName="r" values="5;8;5" dur="1.2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="1.2s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="78" cy="140" r="7">
+        <animate attributeName="r" values="6;9;6" dur="1.6s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="1.6s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="88" cy="170" r="6">
+        <animate attributeName="r" values="5;8;5" dur="1.3s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="1.3s" repeatCount="indefinite" />
+      </circle>
+    </g>
+    <g fill="#6366f1" opacity="0.85">
+      <circle cx="54" cy="112" r="5">
+        <animate attributeName="r" values="4;7;4" dur="2.2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.2s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="108" cy="146" r="5">
+        <animate attributeName="r" values="4;7;4" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="60" cy="160" r="5">
+        <animate attributeName="r" values="4;7;4" dur="2.4s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.4s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="102" cy="190" r="4">
+        <animate attributeName="r" values="3;6;3" dur="2.6s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.6s" repeatCount="indefinite" />
+      </circle>
+    </g>
+  </g>
+
+  <!-- Left callouts -->
+  <g font-family="'Helvetica Neue', Arial" font-size="12" fill="#1d2c49">
+    <line x1="190" y1="160" x2="140" y2="188" stroke="#1d2c49" stroke-width="1.8" marker-end="url(#arrowhead)" />
+    <rect x="190" y="142" width="110" height="34" rx="8" fill="#e0e7ff" stroke="#c7d2fe" />
+    <text x="245" y="163" text-anchor="middle" font-weight="600">Fractured bone</text>
+
+    <line x1="190" y1="210" x2="132" y2="212" stroke="#1d2c49" stroke-width="1.8" marker-end="url(#arrowhead)" />
+    <rect x="190" y="194" width="135" height="36" rx="8" fill="#fee2e2" stroke="#fecaca" />
+    <text x="257" y="214" text-anchor="middle" font-weight="600">Torn muscle fibres</text>
+  </g>
+
+  <!-- Right leg silhouette -->
+  <g transform="translate(360,85)">
+    <path d="M70,0 C40,40 30,90 40,150 C45,180 60,205 72,230 C84,205 98,180 104,150 C116,90 110,40 82,0 Z" fill="#ecfdf5" stroke="#bbf7d0" stroke-width="3" />
+    <path d="M74,15 C62,45 58,95 70,150 C74,168 80,185 85,205" stroke="url(#boneGradientHealed)" stroke-width="16" stroke-linecap="round" />
+    <path d="M60,120 C80,140 92,132 100,110" stroke="#34d399" stroke-width="13" stroke-linecap="round" />
+
+    <g fill="#ef4444" opacity="0.9">
+      <circle cx="70" cy="110" r="6">
+        <animate attributeName="r" values="5;8;5" dur="1.5s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="94" cy="142" r="7">
+        <animate attributeName="r" values="6;9;6" dur="1.7s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="1.7s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="82" cy="175" r="6">
+        <animate attributeName="r" values="5;8;5" dur="1.6s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="1.6s" repeatCount="indefinite" />
+      </circle>
+    </g>
+    <g fill="#6366f1" opacity="0.85">
+      <circle cx="56" cy="130" r="5">
+        <animate attributeName="r" values="4;7;4" dur="2.3s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.3s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="104" cy="168" r="5">
+        <animate attributeName="r" values="4;7;4" dur="2.5s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.5s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="68" cy="190" r="4">
+        <animate attributeName="r" values="3;6;3" dur="2.6s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.6s" repeatCount="indefinite" />
+      </circle>
+    </g>
+  </g>
+
+  <!-- Right callouts -->
+  <g font-family="'Helvetica Neue', Arial" font-size="12" fill="#14532d">
+    <line x1="450" y1="165" x2="520" y2="190" stroke="#14532d" stroke-width="1.8" marker-end="url(#arrowhead)" />
+    <rect x="470" y="135" width="150" height="40" rx="8" fill="#dcfce7" stroke="#86efac" />
+    <text x="545" y="160" text-anchor="middle" font-weight="600">Structure healed, signals remain</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(100,290)">
+    <rect x="-40" y="-16" width="520" height="30" rx="14" fill="#fff7ed" stroke="#fed7aa" stroke-width="1" />
+    <circle cx="20" cy="-1" r="7" fill="#ef4444" />
+    <text x="35" y="4" font-family="'Helvetica Neue', Arial" font-size="13" fill="#b91c1c">New cellular damage – triggered by your recent injury</text>
+    <circle cx="300" cy="-1" r="6" fill="#6366f1" />
+    <text x="315" y="4" font-family="'Helvetica Neue', Arial" font-size="13" fill="#3730a3">Prenatal cellular damage – dormant patterns reactivated</text>
+  </g>
+</svg>

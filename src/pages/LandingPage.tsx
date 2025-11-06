@@ -217,7 +217,9 @@ const LandingPage: React.FC = () => {
                 aria-label={visual.illustration.alt}
                 data-illustration-key={visual.illustration.key}
                 style={{
-                  backgroundImage: `var(--hero-visual-${visual.illustration.key}, linear-gradient(135deg, rgba(29, 44, 73, 0.85), rgba(29, 44, 73, 0.6)))`,
+                  backgroundImage: visual.illustration.src
+                    ? `url(${visual.illustration.src})`
+                    : `linear-gradient(135deg, rgba(29, 44, 73, 0.85), rgba(29, 44, 73, 0.6))`,
                 }}
               >
                 <span className={styles.landing__heroIllustrationCaption}>
